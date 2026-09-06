@@ -55,6 +55,8 @@
         .search-box { background: var(--bg-gray); border-radius: 20px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
         .search-box input { border: none; background: transparent; outline: none; width: 100%; font-size: 14px; color: var(--text-main); }
         
+        .section-header { padding: 10px 15px 5px; font-size: 12px; font-weight: bold; color: var(--text-sub); text-transform: uppercase; background: var(--bg-gray); border-bottom: 1px solid var(--border-color); }
+
         .chat-list { flex: 1; overflow-y: auto; }
         .chat-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; }
         .chat-item:active, .chat-item.active { background: var(--zalo-light-blue); }
@@ -455,10 +457,12 @@
     });
   }
 
+  // SẮP XẾP VÀ HIỂN THỊ DANH SÁCH TÀI KHOẢN THEO CHỮ CÁI A-Z
   function renderSidebarList(users, groups, query) {
     const chatList = document.getElementById('chatList');
     chatList.innerHTML = '';
 
+    // Render Nhóm Chat
     Object.values(groups).forEach(g => {
       if (g.name.toLowerCase().includes(query) && g.members && g.members[currentUser.id]) {
         const div = document.createElement('div');
@@ -472,8 +476,18 @@
       }
     });
 
-    Object.values(users).forEach(u => {
-      if (u.id !== currentUser.id && u.name.toLowerCase().includes(query)) {
+    // Lọc và Sắp xếp người dùng theo thứ tự Chữ cái (A - Z)
+    const sortedUsers = Object.values(users)
+      .filter(u => u.id !== currentUser.id && u.name.toLowerCase().includes(query))
+      .sort((a, b) => a.name.localeCompare(b.name, 'vi', { sensitivity: 'base' }));
+
+    if (sortedUsers.length > 0) {
+      const sectionHeader = document.createElement('div');
+      sectionHeader.className = 'section-header';
+      sectionHeader.innerText = 'Các tài khoản bạn có thể biết';
+      chatList.appendChild(sectionHeader);
+
+      sortedUsers.forEach(u => {
         const isFriend = !!myFriendsList[u.id];
         const div = document.createElement('div');
         div.className = 'chat-item';
@@ -489,8 +503,8 @@
         `;
         div.onclick = () => selectTarget({ id: u.id, type: 'user', name: u.name, avatar: u.avatar, online: u.online, isFriend: isFriend });
         chatList.appendChild(div);
-      }
-    });
+      });
+    }
   }
 
   window.sendFriendRequest = function(targetId, e) {
