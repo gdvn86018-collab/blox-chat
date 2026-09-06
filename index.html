@@ -69,13 +69,20 @@
         .chat-header { height: 65px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
         .call-btns { display: flex; gap: 15px; font-size: 18px; color: var(--zalo-blue); cursor: pointer; align-items: center; }
 
-        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .msg-row { display: flex; gap: 8px; max-width: 65%; align-items: flex-end; }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+        
+        /* Cấu trúc tin nhắn có Avatar chuẩn Zalo */
+        .msg-row { display: flex; gap: 10px; max-width: 70%; align-items: flex-start; }
         .msg-row.me { align-self: flex-end; flex-direction: row-reverse; }
-        .msg-content { background: var(--bg-card); color: var(--text-main); padding: 10px 14px; border-radius: 8px; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .msg-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px; }
+        
+        .msg-content { background: var(--bg-card); color: var(--text-main); padding: 8px 12px; border-radius: 12px; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative; min-width: 120px; }
         .msg-row.me .msg-content { background: var(--zalo-light-blue); }
-        .msg-img { max-width: 200px; border-radius: 8px; margin-top: 5px; }
+        .msg-sender-name { font-size: 12px; font-weight: 500; color: var(--text-sub); margin-bottom: 4px; }
+        .msg-text-body { font-size: 14px; line-height: 1.4; word-break: break-word; }
+        .msg-time-stamp { font-size: 11px; color: var(--text-sub); text-align: right; margin-top: 4px; }
 
+        .msg-img { max-width: 220px; border-radius: 8px; margin-top: 5px; }
         .file-card { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.05); padding: 8px 12px; border-radius: 6px; margin-top: 4px; }
         .file-card i { font-size: 24px; color: var(--zalo-blue); }
 
@@ -246,14 +253,17 @@
             </div>
         </div>
         <div class="setting-section">
-            <button class="btn-sm" style="border-color:red; color:red;" onclick="logout()">Đăng xuất / Xóa bộ nhớ phiên</button>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-sm" style="border-color:#7589a3; color:var(--text-main);" onclick="logout()">Đăng xuất</button>
+                <button class="btn-sm" style="border-color:red; color:red; background:rgba(255,0,0,0.05);" onclick="deleteAccount()"><i class="fa-solid fa-trash"></i> Xóa tài khoản vĩnh viễn</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, set, push, onValue, update, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+  import { getDatabase, ref, set, push, onValue, update, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD9qpVwMj0dUk7RxifJMXbuTYNB87urGnM",
@@ -307,7 +317,21 @@
     listenFriendRequests();
   }
 
-  // ĐỔI ẢNH ĐẠI DIỆN CÁ NHÂN
+  window.deleteAccount = function() {
+    if (!currentUser) return;
+    const confirmDelete = confirm("CẢNH BÁO: Bạn có chắc chắn muốn XÓA VĨNH VIỄN tài khoản này không?");
+    if (!confirmDelete) return;
+
+    remove(ref(db, 'users/' + currentUser.id))
+      .then(() => {
+        remove(ref(db, 'friend_requests/' + currentUser.id));
+        remove(ref(db, 'friends/' + currentUser.id));
+        localStorage.clear();
+        alert("Đã xóa tài khoản thành công!");
+        location.reload();
+      });
+  };
+
   window.updateUserAvatar = function(fileInput) {
     const file = fileInput.files[0];
     if (!file || !currentUser) return;
@@ -327,7 +351,6 @@
     reader.readAsDataURL(file);
   };
 
-  // ĐỔI ẢNH ĐẠI DIỆN NHÓM
   window.updateGroupAvatar = function(fileInput) {
     const file = fileInput.files[0];
     if (!file || !activeTarget || activeTarget.type !== 'group') return;
@@ -478,7 +501,17 @@
         const div = document.createElement('div');
         div.className = `msg-row ${isMe ? 'me' : ''}`;
         
-        let content = `<div class="msg-content">`;
+        // Render Avatar nếu là tin nhắn đối phương
+        let avatarHtml = !isMe ? `<img src="${msg.senderAvatar || 'https://via.placeholder.com/36'}" class="msg-avatar">` : '';
+
+        let content = `${avatarHtml}<div class="msg-content">`;
+        
+        // Hiển thị tên người gửi nếu không phải chính mình
+        if (!isMe && msg.senderName) {
+          content += `<div class="msg-sender-name">${msg.senderName}</div>`;
+        }
+
+        content += `<div class="msg-text-body">`;
         if (msg.sticker) content += `<div style="font-size:48px;">${msg.sticker}</div>`;
         if (msg.text) content += `<div>${msg.text}</div>`;
         if (msg.image) content += `<img src="${msg.image}" class="msg-img">`;
@@ -494,6 +527,11 @@
           `;
         }
         content += `</div>`;
+
+        // Thời gian gửi tin nhắn
+        const timeStr = msg.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        content += `<div class="msg-time-stamp">${timeStr}</div></div>`;
+
         div.innerHTML = content;
         msgContainer.appendChild(div);
       });
@@ -502,10 +540,21 @@
     });
   }
 
+  function getCurrentTime() {
+    const now = new Date();
+    return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+  }
+
   window.sendTextMessage = function() {
     const input = document.getElementById('msgInput');
     if (!input.value.trim() || !activeTarget) return;
-    push(ref(db, `${getRoomPath()}/messages`), { senderId: currentUser.id, text: input.value.trim() });
+    push(ref(db, `${getRoomPath()}/messages`), { 
+      senderId: currentUser.id, 
+      senderName: currentUser.name,
+      senderAvatar: currentUser.avatar,
+      text: input.value.trim(),
+      time: getCurrentTime()
+    });
     input.value = '';
   };
 
@@ -513,7 +562,15 @@
     const file = fileInput.files[0];
     if (!file || !activeTarget) return;
     const reader = new FileReader();
-    reader.onload = function(e) { push(ref(db, `${getRoomPath()}/messages`), { senderId: currentUser.id, image: e.target.result }); };
+    reader.onload = function(e) { 
+      push(ref(db, `${getRoomPath()}/messages`), { 
+        senderId: currentUser.id, 
+        senderName: currentUser.name,
+        senderAvatar: currentUser.avatar,
+        image: e.target.result,
+        time: getCurrentTime()
+      }); 
+    };
     reader.readAsDataURL(file);
   };
 
@@ -524,7 +581,10 @@
     reader.onload = function(e) {
       push(ref(db, `${getRoomPath()}/messages`), {
         senderId: currentUser.id,
-        file: { name: file.name, size: file.size, data: e.target.result }
+        senderName: currentUser.name,
+        senderAvatar: currentUser.avatar,
+        file: { name: file.name, size: file.size, data: e.target.result },
+        time: getCurrentTime()
       });
     };
     reader.readAsDataURL(file);
@@ -538,7 +598,13 @@
 
   window.sendSticker = function(emoji) {
     if (!activeTarget) return;
-    push(ref(db, `${getRoomPath()}/messages`), { senderId: currentUser.id, sticker: emoji });
+    push(ref(db, `${getRoomPath()}/messages`), { 
+      senderId: currentUser.id, 
+      senderName: currentUser.name,
+      senderAvatar: currentUser.avatar,
+      sticker: emoji,
+      time: getCurrentTime()
+    });
     document.getElementById('stickerBox').style.display = 'none';
   };
 
