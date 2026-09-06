@@ -1,3088 +1,3287 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MyChat - Discord Style</title>
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1.0"
+>
+
+<title>Blox Fruits Việt Nam</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
 
-:root{
-    --accent:#5865f2;
-    --bg:#313338;
-    --dark:#1e1f22;
-    --darker:#111214;
-    --panel:#2b2d31;
-    --hover:#35373c;
-    --text:#f2f3f5;
-    --muted:#b5bac1;
-    --danger:#ed4245;
+*{
+  box-sizing:border-box;
 }
 
 body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    height:100vh;
-    overflow:hidden;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#313338;
+  color:#f2f3f5;
 }
 
-/* ================= LOGIN ================= */
-
-#authScreen{
-    width:100%;
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:
-        radial-gradient(circle at top left,#5865f255,transparent 35%),
-        radial-gradient(circle at bottom right,#8b5cf655,transparent 35%),
-        #111214;
+button,
+input{
+  font:inherit;
 }
 
-.authBox{
-    width:420px;
-    max-width:92%;
-    background:#2b2d31;
-    padding:32px;
-    border-radius:12px;
-    box-shadow:0 20px 60px #0008;
+button{
+  cursor:pointer;
 }
 
-.authBox h1{
-    text-align:center;
-    margin-bottom:8px;
+.hidden{
+  display:none!important;
 }
 
-.authBox .sub{
-    text-align:center;
-    color:var(--muted);
-    margin-bottom:25px;
+
+/* ================= AUTH ================= */
+
+#auth{
+  min-height:100vh;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5865f2,
+      #111214
+    );
 }
 
-.authBox input{
-    width:100%;
-    padding:13px;
-    border:0;
-    outline:none;
-    border-radius:6px;
-    margin-top:8px;
-    background:#1e1f22;
-    color:white;
-    font-size:15px;
+.auth-box{
+  width:390px;
+  max-width:92%;
+
+  background:#1e1f22;
+
+  padding:30px;
+
+  border-radius:12px;
+
+  box-shadow:
+    0 20px 60px #0008;
 }
 
-.authBox label{
-    display:block;
-    margin-top:14px;
-    font-size:12px;
-    font-weight:bold;
-    color:#ddd;
-    text-transform:uppercase;
+.auth-box h1{
+  text-align:center;
 }
 
-.authBtn{
-    width:100%;
-    margin-top:20px;
-    padding:13px;
-    border:0;
-    border-radius:6px;
-    background:var(--accent);
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
+.auth-box p{
+  text-align:center;
+  color:#b5bac1;
 }
 
-.authBtn:hover{
-    opacity:.9;
+.auth-box input{
+  width:100%;
+
+  padding:13px;
+
+  margin-top:10px;
+
+  border:0;
+
+  border-radius:6px;
+
+  background:#111214;
+
+  color:white;
+
+  outline:none;
 }
 
-.switchAuth{
-    text-align:center;
-    color:var(--muted);
-    margin-top:18px;
-    font-size:14px;
+.auth-box button{
+  width:100%;
+
+  margin-top:12px;
+
+  padding:13px;
+
+  border:0;
+
+  border-radius:6px;
+
+  background:#5865f2;
+
+  color:white;
+
+  font-weight:bold;
 }
 
-.switchAuth span{
-    color:#8ea1ff;
-    cursor:pointer;
+.switch{
+  text-align:center;
+
+  color:#00a8fc;
+
+  margin-top:18px;
+
+  cursor:pointer;
 }
 
-.remember{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-top:15px;
-    color:#ddd;
-    font-size:14px;
-}
-
-.remember input{
-    width:auto;
-    margin:0;
-}
-
-/* ================= SAVED ACCOUNTS ================= */
-
-.savedAccounts{
-    margin-top:20px;
-}
-
-.savedAccounts h3{
-    font-size:13px;
-    color:#aaa;
-    margin-bottom:8px;
-}
-
-.savedAccount{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:9px;
-    background:#1e1f22;
-    border-radius:7px;
-    margin-bottom:6px;
-    cursor:pointer;
-}
-
-.savedAccount:hover{
-    background:#18191c;
-}
-
-.savedAccount img{
-    width:36px;
-    height:36px;
-    border-radius:50%;
-    object-fit:cover;
-}
-
-.savedAccountInfo{
-    flex:1;
-}
-
-.savedAccountName{
-    font-weight:bold;
-}
-
-.savedAccountText{
-    color:#999;
-    font-size:12px;
-}
-
-.removeSaved{
-    color:#888;
-    cursor:pointer;
-    padding:5px;
-}
-
-.removeSaved:hover{
-    color:var(--danger);
-}
 
 /* ================= APP ================= */
 
 #app{
-    display:none;
-    height:100vh;
-    width:100%;
+  display:none;
+
+  height:100vh;
+
+  grid-template-columns:
+    70px
+    230px
+    minmax(0,1fr)
+    220px;
 }
 
-.serverBar{
-    width:72px;
-    background:#1e1f22;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:10px 0;
-    gap:10px;
+
+/* ================= SERVERS ================= */
+
+.servers{
+  background:#1e1f22;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  padding-top:12px;
+
+  gap:10px;
 }
 
-.serverIcon{
-    width:50px;
-    height:50px;
-    border-radius:16px;
-    background:#313338;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.2s;
+.server-icon{
+  width:48px;
+  height:48px;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:#313338;
+
+  border-radius:50%;
+
+  font-size:21px;
 }
 
-.serverIcon:hover{
-    border-radius:15px;
-    background:var(--accent);
+.server-icon:hover{
+  background:#5865f2;
+
+  border-radius:15px;
 }
 
-.serverIcon.active{
-    background:var(--accent);
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+  background:#2b2d31;
+
+  display:flex;
+
+  flex-direction:column;
+
+  min-height:0;
 }
 
-/* CHANNEL BAR */
+.server-name{
+  height:55px;
 
-.channelBar{
-    width:240px;
-    background:#2b2d31;
-    display:flex;
-    flex-direction:column;
+  display:flex;
+
+  align-items:center;
+
+  padding:0 15px;
+
+  font-weight:bold;
+
+  border-bottom:
+    1px solid #1e1f22;
 }
 
-.serverTitle{
-    height:55px;
-    display:flex;
-    align-items:center;
-    padding:0 18px;
-    font-weight:bold;
-    border-bottom:1px solid #202225;
-}
+.channels{
+  flex:1;
 
-.channelList{
-    flex:1;
-    overflow-y:auto;
-    padding:15px 8px;
+  overflow:auto;
+
+  padding:10px;
 }
 
 .category{
-    color:#949ba4;
-    font-size:12px;
-    font-weight:bold;
-    margin:10px 8px 5px;
+  color:#949ba4;
+
+  font-size:11px;
+
+  font-weight:bold;
+
+  margin:
+    12px 7px 5px;
 }
 
 .channel{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    padding:9px 10px;
-    color:#aaa;
-    border-radius:5px;
-    cursor:pointer;
-    margin:2px 0;
+  padding:9px;
+
+  border-radius:5px;
+
+  color:#b5bac1;
+
+  cursor:pointer;
 }
 
-.channel:hover{
-    background:#35373c;
-    color:#fff;
-}
-
+.channel:hover,
 .channel.active{
-    background:#404249;
-    color:white;
+  background:#404249;
+
+  color:white;
 }
 
-.channelIcon{
-    font-size:18px;
+
+/* ================= BOTTOM USER ================= */
+
+.user-bar{
+  background:#232428;
+
+  padding:9px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
 }
 
-/* USER BAR */
+.user-bar img{
+  width:36px;
+  height:36px;
 
-.userBar{
-    height:58px;
-    background:#232428;
-    display:flex;
-    align-items:center;
-    padding:7px;
-    gap:8px;
+  border-radius:50%;
+
+  object-fit:cover;
 }
 
-.userAvatar{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    object-fit:cover;
-    background:#555;
+.user-info{
+  flex:1;
+
+  min-width:0;
 }
 
-.userInfo{
-    min-width:0;
-    flex:1;
+.user-info strong{
+  display:block;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
 }
 
-.userName{
-    font-size:13px;
-    font-weight:bold;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+.online{
+  color:#23a559;
+
+  font-size:11px;
 }
 
-.userStatus{
-    font-size:11px;
-    color:#aaa;
+.gear{
+  background:none;
+
+  border:0;
+
+  color:white;
+
+  font-size:18px;
 }
 
-.userActions{
-    display:flex;
-    gap:3px;
-}
-
-.iconBtn{
-    border:0;
-    background:transparent;
-    color:#aaa;
-    cursor:pointer;
-    padding:7px;
-    border-radius:5px;
-}
-
-.iconBtn:hover{
-    background:#3a3c42;
-    color:white;
-}
 
 /* ================= MAIN ================= */
 
 .main{
-    flex:1;
-    display:flex;
-    min-width:0;
+  min-width:0;
+
+  display:flex;
+
+  flex-direction:column;
 }
 
-.content{
-    flex:1;
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-}
+.header{
+  height:55px;
 
-.topBar{
-    height:55px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:0 18px;
-    background:#313338;
-    border-bottom:1px solid #202225;
-}
+  display:flex;
 
-.topBar .hash{
-    color:#aaa;
-    font-size:22px;
-}
+  align-items:center;
 
-.topBarTitle{
-    font-weight:bold;
-}
+  padding:0 18px;
 
-.home{
-    flex:1;
-    overflow-y:auto;
-    padding:50px;
-}
+  border-bottom:
+    1px solid #1e1f22;
 
-.home h1{
-    font-size:30px;
-    margin-bottom:10px;
-}
-
-.home p{
-    color:#aaa;
-    margin-bottom:30px;
-}
-
-.homeCards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:15px;
-    max-width:900px;
-}
-
-.homeCard{
-    background:#2b2d31;
-    padding:25px;
-    border-radius:10px;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.homeCard:hover{
-    transform:translateY(-3px);
-    background:#35373c;
-}
-
-.homeCard .big{
-    font-size:30px;
-    margin-bottom:10px;
-}
-
-.homeCard p{
-    margin:5px 0 0;
-}
-
-/* ================= CHAT ================= */
-
-.chatArea{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    min-height:0;
+  font-weight:bold;
 }
 
 .messages{
-    flex:1;
-    overflow-y:auto;
-    padding:15px 20px 30px;
-    scroll-behavior:smooth;
+  flex:1;
+
+  overflow:auto;
+
+  padding:20px;
 }
 
 .message{
-    display:flex;
-    gap:12px;
-    padding:7px 10px;
-    margin-bottom:4px;
-    border-radius:5px;
-    position:relative;
+  display:flex;
+
+  gap:11px;
+
+  margin-bottom:18px;
 }
 
-.message:hover{
-    background:#2e3035;
+.message-avatar{
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+
+  object-fit:cover;
 }
 
-.messageAvatar{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    object-fit:cover;
-    flex:none;
+.message-name{
+  font-weight:bold;
+
+  cursor:pointer;
 }
 
-.messageBody{
-    min-width:0;
-    flex:1;
+.message-name:hover{
+  text-decoration:underline;
 }
 
-.messageHeader{
-    display:flex;
-    align-items:center;
-    gap:8px;
+.time{
+  color:#949ba4;
+
+  font-size:11px;
+
+  margin-left:7px;
 }
 
-.messageUser{
-    font-weight:bold;
-    color:white;
+.text{
+  margin-top:4px;
+
+  white-space:pre-wrap;
+
+  word-break:break-word;
 }
 
-.messageTime{
-    font-size:11px;
-    color:#777;
+.message-image{
+  max-width:400px;
+  max-height:350px;
+
+  margin-top:7px;
+
+  border-radius:8px;
 }
 
-.messageText{
-    margin-top:3px;
-    white-space:pre-wrap;
-    word-break:break-word;
-    color:#ddd;
+.sticker{
+  font-size:50px;
+
+  margin-top:5px;
 }
 
-.messageImage{
-    max-width:400px;
-    max-height:350px;
-    border-radius:8px;
-    margin-top:8px;
-    display:block;
-    cursor:pointer;
+
+/* ================= INPUT ================= */
+
+.input-area{
+  position:relative;
+
+  padding:
+    10px 15px 18px;
+
+  display:flex;
+
+  gap:8px;
 }
 
-.recalled{
-    color:#888;
-    font-style:italic;
+.input-area input[type=text]{
+  flex:1;
+
+  background:#383a40;
+
+  border:0;
+
+  outline:none;
+
+  color:white;
+
+  padding:13px;
+
+  border-radius:8px;
 }
 
-.messageMenuBtn{
-    position:absolute;
-    right:8px;
-    top:-8px;
-    display:none;
-    border:0;
-    background:#111214;
-    color:#bbb;
-    border-radius:5px;
-    padding:5px 8px;
-    cursor:pointer;
+.send-btn,
+.icon-btn{
+  border:0;
+
+  border-radius:8px;
+
+  background:#5865f2;
+
+  color:white;
+
+  padding:0 15px;
 }
 
-.message:hover .messageMenuBtn{
-    display:block;
+.icon-btn{
+  width:45px;
+
+  padding:0;
+
+  font-size:20px;
 }
 
-.messageMenu{
-    position:absolute;
-    right:10px;
-    top:27px;
-    background:#111214;
-    border-radius:6px;
-    padding:5px;
-    z-index:20;
-    box-shadow:0 5px 20px #0008;
+
+/* ================= STICKERS ================= */
+
+.stickers{
+  display:none;
+
+  position:absolute;
+
+  bottom:75px;
+
+  left:15px;
+
+  width:300px;
+
+  background:#111214;
+
+  padding:12px;
+
+  border-radius:10px;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:7px;
 }
 
-.messageMenu button{
-    border:0;
-    background:transparent;
-    color:#ddd;
-    padding:8px 12px;
-    width:170px;
-    text-align:left;
-    cursor:pointer;
-    border-radius:4px;
+.stickers.show{
+  display:grid;
 }
 
-.messageMenu button:hover{
-    background:#35373c;
+.stickers button{
+  height:55px;
+
+  border:0;
+
+  border-radius:7px;
+
+  background:#2b2d31;
+
+  color:white;
+
+  font-size:26px;
 }
 
-.messageMenu .danger{
-    color:#ed4245;
-}
-
-/* INPUT */
-
-.chatInputArea{
-    padding:0 20px 20px;
-}
-
-.chatInput{
-    background:#383a40;
-    border-radius:8px;
-    display:flex;
-    align-items:center;
-    padding:4px 8px;
-    gap:8px;
-}
-
-.chatInput input{
-    flex:1;
-    background:transparent;
-    border:0;
-    outline:none;
-    color:white;
-    padding:12px 5px;
-    font-size:15px;
-}
-
-.attachBtn,
-.sendBtn{
-    width:38px;
-    height:38px;
-    border:0;
-    border-radius:50%;
-    background:transparent;
-    color:#bbb;
-    cursor:pointer;
-    font-size:18px;
-}
-
-.attachBtn:hover,
-.sendBtn:hover{
-    background:#4a4c53;
-    color:white;
-}
 
 /* ================= MEMBERS ================= */
 
 .members{
-    width:220px;
-    background:#2b2d31;
-    padding:20px 12px;
-    overflow-y:auto;
+  background:#2b2d31;
+
+  padding:17px 12px;
+
+  overflow:auto;
 }
 
-.membersTitle{
-    color:#aaa;
-    font-size:12px;
-    font-weight:bold;
-    margin-bottom:10px;
+.members-title{
+  color:#949ba4;
+
+  font-size:11px;
+
+  font-weight:bold;
+
+  margin-bottom:10px;
 }
 
 .member{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    padding:7px;
-    border-radius:5px;
-}
+  display:flex;
 
-.member img{
-    width:32px;
-    height:32px;
-    border-radius:50%;
-    object-fit:cover;
+  align-items:center;
+
+  gap:8px;
+
+  padding:7px;
+
+  border-radius:6px;
+
+  cursor:pointer;
 }
 
 .member:hover{
-    background:#35373c;
+  background:#35373c;
 }
+
+.member img{
+  width:34px;
+  height:34px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+}
+
+
+/* ================= HOME ================= */
+
+.home{
+  flex:1;
+
+  overflow:auto;
+
+  padding:40px;
+}
+
+.home h1{
+  font-size:32px;
+}
+
+.home p{
+  color:#b5bac1;
+}
+
+.cards{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,minmax(180px,1fr));
+
+  gap:15px;
+
+  margin-top:30px;
+}
+
+.card{
+  background:#2b2d31;
+
+  padding:23px;
+
+  border-radius:10px;
+
+  cursor:pointer;
+}
+
+.card:hover{
+  background:#35373c;
+
+  transform:translateY(-2px);
+}
+
 
 /* ================= MODAL ================= */
 
 .modal{
-    position:fixed;
-    inset:0;
-    background:#0009;
+  display:none;
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:100;
+
+  background:#000b;
+
+  justify-content:center;
+
+  align-items:center;
+
+  padding:20px;
+}
+
+.modal-box{
+  width:520px;
+
+  max-width:100%;
+
+  max-height:90vh;
+
+  overflow:auto;
+
+  background:#313338;
+
+  border-radius:10px;
+
+  padding:25px;
+}
+
+.modal-head{
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+}
+
+.close{
+  border:0;
+
+  background:none;
+
+  color:white;
+
+  font-size:22px;
+}
+
+
+/* ================= FRIEND ================= */
+
+.search{
+  display:flex;
+
+  gap:8px;
+
+  margin:20px 0;
+}
+
+.search input{
+  flex:1;
+
+  padding:12px;
+
+  background:#1e1f22;
+
+  color:white;
+
+  border:0;
+
+  border-radius:6px;
+
+  outline:none;
+}
+
+.search button{
+  border:0;
+
+  border-radius:6px;
+
+  background:#5865f2;
+
+  color:white;
+
+  padding:0 14px;
+}
+
+.friend{
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  background:#1e1f22;
+
+  padding:10px;
+
+  border-radius:8px;
+
+  margin-top:8px;
+}
+
+.friend img{
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+}
+
+.friend-info{
+  flex:1;
+}
+
+.friend-info small{
+  display:block;
+
+  color:#949ba4;
+}
+
+.friend button{
+  border:0;
+
+  padding:7px 10px;
+
+  border-radius:6px;
+
+  color:white;
+}
+
+.accept{
+  background:#23a559;
+}
+
+.reject{
+  background:#da373c;
+}
+
+.remove{
+  background:#da373c;
+}
+
+
+/* ================= PROFILE ================= */
+
+.cover{
+  height:85px;
+
+  background:#5865f2;
+
+  margin:-25px -25px 0;
+
+  border-radius:
+    10px 10px 0 0;
+}
+
+.profile{
+  display:flex;
+
+  align-items:center;
+
+  gap:15px;
+
+  margin-top:-40px;
+}
+
+.profile img{
+  width:85px;
+  height:85px;
+
+  border-radius:50%;
+
+  border:6px solid #313338;
+
+  object-fit:cover;
+}
+
+.profile-bio{
+  color:#b5bac1;
+
+  margin-top:18px;
+}
+
+
+/* ================= SETTINGS ================= */
+
+.form-input{
+  width:100%;
+
+  padding:12px;
+
+  background:#1e1f22;
+
+  border:0;
+
+  color:white;
+
+  border-radius:6px;
+
+  margin:
+    7px 0 14px;
+
+  outline:none;
+}
+
+.save{
+  border:0;
+
+  padding:11px 17px;
+
+  border-radius:6px;
+
+  background:#5865f2;
+
+  color:white;
+}
+
+
+/* ================= TOAST ================= */
+
+.toast{
+  display:none;
+
+  position:fixed;
+
+  right:20px;
+
+  bottom:20px;
+
+  background:#111214;
+
+  padding:13px 17px;
+
+  border-radius:8px;
+
+  z-index:999;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:950px){
+
+  #app{
+    grid-template-columns:
+      60px
+      210px
+      minmax(0,1fr);
+  }
+
+  .members{
     display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:100;
-}
+  }
 
-.modalBox{
-    width:520px;
-    max-width:94%;
-    max-height:90vh;
-    overflow-y:auto;
-    background:#2b2d31;
-    border-radius:10px;
-    padding:25px;
-}
-
-.modalBox h2{
-    margin-bottom:20px;
-}
-
-.settingSection{
-    margin-bottom:25px;
-}
-
-.settingSection h3{
-    font-size:14px;
-    margin-bottom:10px;
-}
-
-.settingSection input[type=text]{
-    width:100%;
-    background:#1e1f22;
-    border:0;
-    outline:none;
-    color:white;
-    padding:12px;
-    border-radius:6px;
-}
-
-.saveBtn{
-    margin-top:10px;
-    padding:10px 15px;
-    border:0;
-    border-radius:5px;
-    background:var(--accent);
-    color:white;
-    cursor:pointer;
-}
-
-.avatarSetting{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.avatarSetting img{
-    width:80px;
-    height:80px;
-    border-radius:50%;
-    object-fit:cover;
-}
-
-.avatarButtons{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-}
-
-.smallBtn{
-    padding:8px 11px;
-    border:0;
-    border-radius:5px;
-    background:#404249;
-    color:white;
-    cursor:pointer;
-}
-
-.smallBtn:hover{
-    background:#4b4d54;
-}
-
-.dangerBtn{
-    background:#b83235;
-}
-
-.dangerBtn:hover{
-    background:#ed4245;
-}
-
-.themeGrid{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-.theme{
-    width:42px;
-    height:42px;
-    border-radius:8px;
-    cursor:pointer;
-    border:3px solid transparent;
-}
-
-.theme.selected{
-    border-color:white;
-}
-
-/* ================= AVATAR EDITOR ================= */
-
-.editorWrap{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-
-.editorCanvasWrap{
-    width:300px;
-    height:300px;
-    background:#111;
-    border-radius:50%;
-    overflow:hidden;
-    position:relative;
-    border:4px solid #555;
-    cursor:grab;
-    touch-action:none;
-}
-
-.editorCanvasWrap:active{
-    cursor:grabbing;
-}
-
-#avatarCanvas{
-    width:100%;
-    height:100%;
-}
-
-.editorControls{
-    width:100%;
-    margin-top:20px;
-}
-
-.controlRow{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin:10px 0;
-}
-
-.controlRow button{
-    padding:9px 15px;
-    border:0;
-    border-radius:5px;
-    background:#404249;
-    color:white;
-    cursor:pointer;
-}
-
-.controlRow input[type=range]{
-    flex:1;
-}
-
-.editorActions{
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-    margin-top:20px;
-}
-
-/* HISTORY */
-
-.avatarHistory{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-.historyItem{
-    position:relative;
-}
-
-.historyItem img{
-    width:58px;
-    height:58px;
-    object-fit:cover;
-    border-radius:50%;
-    border:2px solid transparent;
-    cursor:pointer;
-}
-
-.historyItem img:hover{
-    border-color:var(--accent);
-}
-
-.historyDelete{
-    position:absolute;
-    right:-3px;
-    top:-3px;
-    width:18px;
-    height:18px;
-    border:0;
-    border-radius:50%;
-    background:#ed4245;
-    color:white;
-    font-size:11px;
-    cursor:pointer;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:850px){
-    .members{
-        display:none;
-    }
 }
 
 @media(max-width:650px){
-    .serverBar{
-        width:58px;
-    }
 
-    .serverIcon{
-        width:42px;
-        height:42px;
-    }
+  #app{
+    grid-template-columns:
+      58px
+      minmax(0,1fr);
+  }
 
-    .channelBar{
-        width:190px;
-    }
+  .sidebar{
+    display:none;
+  }
 
-    .home{
-        padding:25px;
-    }
+  .cards{
+    grid-template-columns:1fr;
+  }
 
-    .messageImage{
-        max-width:100%;
-    }
+  .home{
+    padding:20px;
+  }
+
 }
 
-@media(max-width:500px){
-    .channelBar{
-        width:0;
-        overflow:hidden;
-    }
-
-    .serverBar{
-        width:52px;
-    }
-
-    .home{
-        padding:20px;
-    }
-
-    .topBar{
-        padding:0 10px;
-    }
-
-    .chatInputArea{
-        padding:0 8px 10px;
-    }
-
-    .messages{
-        padding:10px 6px 20px;
-    }
-}
 </style>
+
 </head>
+
 
 <body>
 
-<!-- ================= LOGIN ================= -->
 
-<div id="authScreen">
+<!-- ==================================================
+     LOGIN / REGISTER
+================================================== -->
 
-    <div class="authBox">
+<div id="auth">
 
-        <h1>💬 MyChat</h1>
-        <div class="sub">Không gian trò chuyện của bạn</div>
+  <div class="auth-box">
 
-        <div id="loginForm">
+    <h1 id="authTitle">
+      🇻🇳 Blox Fruits VN
+    </h1>
 
-            <label>Tên tài khoản</label>
-            <input id="loginUsername" type="text" placeholder="Nhập tên tài khoản">
+    <p id="authDescription">
+      Đăng nhập vào cộng đồng
+    </p>
 
-            <label>Mật khẩu</label>
-            <input id="loginPassword" type="password" placeholder="Nhập mật khẩu">
+    <input
+      id="username"
+      placeholder="Tên tài khoản"
+      maxlength="20"
+    >
 
-            <label class="remember">
-                <input id="rememberMe" type="checkbox" checked>
-                Ghi nhớ tài khoản trên thiết bị này
-            </label>
+    <input
+      id="password"
+      type="password"
+      placeholder="Mật khẩu"
+    >
 
-            <button class="authBtn" onclick="login()">Đăng nhập</button>
+    <button
+      onclick="auth()"
+      id="authButton"
+    >
+      Đăng nhập
+    </button>
 
-            <div class="switchAuth">
-                Chưa có tài khoản?
-                <span onclick="showRegister()">Đăng ký</span>
-            </div>
-
-            <div id="savedAccountsBox" class="savedAccounts"></div>
-
-        </div>
-
-        <div id="registerForm" style="display:none">
-
-            <label>Tên tài khoản</label>
-            <input id="registerUsername" type="text" placeholder="Ví dụ: NguyenAn">
-
-            <label>Mật khẩu</label>
-            <input id="registerPassword" type="password" placeholder="Mật khẩu">
-
-            <label>Nhập lại mật khẩu</label>
-            <input id="registerPassword2" type="password" placeholder="Nhập lại mật khẩu">
-
-            <button class="authBtn" onclick="register()">Tạo tài khoản</button>
-
-            <div class="switchAuth">
-                Đã có tài khoản?
-                <span onclick="showLogin()">Đăng nhập</span>
-            </div>
-
-        </div>
-
+    <div
+      class="switch"
+      onclick="toggleAuth()"
+      id="switchText"
+    >
+      Chưa có tài khoản? Đăng ký
     </div>
+
+  </div>
 
 </div>
 
 
-<!-- ================= APP ================= -->
+<!-- ==================================================
+     APP
+================================================== -->
 
 <div id="app">
 
-    <div class="serverBar">
 
-        <div class="serverIcon active" onclick="goHome()" title="Trang chủ">
-            M
-        </div>
+  <!-- SERVER BAR -->
 
-        <div class="serverIcon" title="Server">
-            💬
-        </div>
+  <div class="servers">
 
-        <div class="serverIcon" title="Game">
-            🎮
-        </div>
+    <div
+      class="server-icon"
+      onclick="home()"
+    >
+      🏠
+    </div>
 
-        <div class="serverIcon" title="Art">
-            🎨
-        </div>
+    <div
+      class="server-icon"
+      onclick="openFriends()"
+    >
+      👥
+    </div>
+
+    <div
+      class="server-icon"
+      onclick="showToast('🎮 Khu game')"
+    >
+      🎮
+    </div>
+
+  </div>
+
+
+  <!-- SIDEBAR -->
+
+  <div class="sidebar">
+
+    <div class="server-name">
+      🌐 Blox Fruits VN
+    </div>
+
+
+    <div class="channels">
+
+      <div class="category">
+        KÊNH CHAT
+      </div>
+
+      <div
+        class="channel"
+        onclick="openChannel('PVP')"
+      >
+        ⚔️ PVP
+      </div>
+
+      <div
+        class="channel"
+        onclick="openChannel('Rank Bounty')"
+      >
+        🏆 Rank Bounty
+      </div>
+
+      <div
+        class="channel"
+        onclick="openChannel('Art')"
+      >
+        🎨 Art
+      </div>
+
+      <div
+        class="channel"
+        onclick="openChannel('Trò chuyện')"
+      >
+        💬 Trò chuyện
+      </div>
+
+      <div
+        class="channel"
+        onclick="openChannel('Fix lỗi')"
+      >
+        🛠️ Fix lỗi
+      </div>
 
     </div>
 
 
-    <div class="channelBar">
+    <div class="user-bar">
 
-        <div class="serverTitle">
-            MyChat
+      <img id="myAvatar">
+
+      <div class="user-info">
+
+        <strong id="myName">
+          User
+        </strong>
+
+        <div class="online">
+          ● Online
         </div>
 
-        <div class="channelList">
+      </div>
 
-            <div class="category">KÊNH CHAT</div>
+      <button
+        class="gear"
+        onclick="openSettings()"
+      >
+        ⚙️
+      </button>
 
-            <div class="channel" data-channel="PVP" onclick="openChannel('PVP')">
-                <span class="channelIcon">⚔️</span>
-                <span>PVP</span>
-            </div>
+    </div>
 
-            <div class="channel" data-channel="Rank Buonty" onclick="openChannel('Rank Buonty')">
-                <span class="channelIcon">🏆</span>
-                <span>Rank Buonty</span>
-            </div>
+  </div>
 
-            <div class="channel" data-channel="Art" onclick="openChannel('Art')">
-                <span class="channelIcon">🎨</span>
-                <span>Art</span>
-            </div>
 
-            <div class="channel" data-channel="Trò chuyện" onclick="openChannel('Trò chuyện')">
-                <span class="channelIcon">💬</span>
-                <span>Trò chuyện</span>
-            </div>
+  <!-- MAIN -->
 
-        </div>
+  <div class="main">
 
-        <div class="userBar">
+    <div class="header">
 
-            <img id="currentUserAvatar" class="userAvatar">
-
-            <div class="userInfo">
-                <div id="currentUserName" class="userName"></div>
-                <div class="userStatus">Đang hoạt động</div>
-            </div>
-
-            <div class="userActions">
-                <button class="iconBtn" onclick="openSettings()" title="Cài đặt">
-                    ⚙️
-                </button>
-
-                <button class="iconBtn" onclick="logout()" title="Đăng xuất">
-                    ↪
-                </button>
-            </div>
-
-        </div>
+      <span>
+        # <span id="channelName">
+          Trang chủ
+        </span>
+      </span>
 
     </div>
 
 
-    <div class="main">
+    <!-- HOME -->
 
-        <div class="content">
+    <div
+      id="homePage"
+      class="home"
+    >
 
-            <div class="topBar">
+      <h1>
+        🇻🇳 Blox Fruits Việt Nam
+      </h1>
 
-                <span id="topHash" class="hash">#</span>
-
-                <span id="topTitle" class="topBarTitle">
-                    Trang chủ
-                </span>
-
-            </div>
-
-
-            <!-- HOME -->
-
-            <div id="homePage" class="home">
-
-                <h1>Chào mừng đến MyChat 👋</h1>
-
-                <p>
-                    Chọn một kênh bên trái để bắt đầu trò chuyện.
-                </p>
-
-                <div class="homeCards">
-
-                    <div class="homeCard" onclick="openChannel('PVP')">
-                        <div class="big">⚔️</div>
-                        <b>PVP</b>
-                        <p>Trò chuyện về PVP.</p>
-                    </div>
-
-                    <div class="homeCard" onclick="openChannel('Rank Buonty')">
-                        <div class="big">🏆</div>
-                        <b>Rank Buonty</b>
-                        <p>Thảo luận rank.</p>
-                    </div>
-
-                    <div class="homeCard" onclick="openChannel('Art')">
-                        <div class="big">🎨</div>
-                        <b>Art</b>
-                        <p>Chia sẻ tranh và tác phẩm.</p>
-                    </div>
-
-                    <div class="homeCard" onclick="openChannel('Trò chuyện')">
-                        <div class="big">💬</div>
-                        <b>Trò chuyện</b>
-                        <p>Chat tự do.</p>
-                    </div>
-
-                </div>
-
-            </div>
+      <p>
+        Cộng đồng PvP, Art,
+        trò chuyện, fix lỗi và kết bạn.
+      </p>
 
 
-            <!-- CHAT -->
+      <div class="cards">
 
-            <div id="chatPage" class="chatArea" style="display:none">
-
-                <div id="messages" class="messages"></div>
-
-                <div class="chatInputArea">
-
-                    <div class="chatInput">
-
-                        <button class="attachBtn"
-                                onclick="document.getElementById('imageInput').click()"
-                                title="Gửi ảnh">
-                            ＋
-                        </button>
-
-                        <input
-                            id="messageInput"
-                            type="text"
-                            placeholder="Nhắn tin..."
-                            onkeydown="handleEnter(event)"
-                        >
-
-                        <button class="sendBtn"
-                                onclick="sendMessage()"
-                                title="Gửi">
-                            ➤
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <input
-                    id="imageInput"
-                    type="file"
-                    accept="image/*"
-                    style="display:none"
-                    onchange="sendImage(event)"
-                >
-
-            </div>
-
+        <div
+          class="card"
+          onclick="openChannel('PVP')"
+        >
+          <h2>⚔️ PVP</h2>
+          <p>
+            Tìm người chơi PvP.
+          </p>
         </div>
 
-
-        <div class="members">
-
-            <div class="membersTitle">
-                TRỰC TUYẾN
-            </div>
-
-            <div class="member">
-
-                <img id="memberAvatar">
-
-                <span id="memberName"></span>
-
-            </div>
-
+        <div
+          class="card"
+          onclick="openChannel('Rank Bounty')"
+        >
+          <h2>🏆 Rank Bounty</h2>
+          <p>
+            Chia sẻ bounty.
+          </p>
         </div>
+
+        <div
+          class="card"
+          onclick="openChannel('Art')"
+        >
+          <h2>🎨 Art</h2>
+          <p>
+            Chia sẻ tranh.
+          </p>
+        </div>
+
+        <div
+          class="card"
+          onclick="openChannel('Trò chuyện')"
+        >
+          <h2>💬 Trò chuyện</h2>
+          <p>
+            Nói chuyện với mọi người.
+          </p>
+        </div>
+
+        <div
+          class="card"
+          onclick="openChannel('Fix lỗi')"
+        >
+          <h2>🛠️ Fix lỗi</h2>
+          <p>
+            Hỏi đáp lỗi game.
+          </p>
+        </div>
+
+        <div
+          class="card"
+          onclick="openFriends()"
+        >
+          <h2>👥 Bạn bè</h2>
+          <p>
+            Add Friend giống Discord.
+          </p>
+        </div>
+
+      </div>
 
     </div>
+
+
+    <!-- MESSAGES -->
+
+    <div
+      id="messages"
+      class="messages hidden"
+    ></div>
+
+
+    <!-- STICKERS -->
+
+    <div
+      id="stickers"
+      class="stickers"
+    ></div>
+
+
+    <!-- INPUT -->
+
+    <div
+      id="inputArea"
+      class="input-area hidden"
+    >
+
+      <button
+        class="icon-btn"
+        onclick="toggleStickers()"
+      >
+        🧩
+      </button>
+
+
+      <label
+        class="icon-btn"
+        style="
+          display:flex;
+          justify-content:center;
+          align-items:center;
+        "
+      >
+
+        🖼️
+
+        <input
+          id="imageInput"
+          type="file"
+          accept="image/*"
+          hidden
+          onchange="sendImage(event)"
+        >
+
+      </label>
+
+
+      <input
+        id="messageInput"
+        type="text"
+        maxlength="2000"
+        placeholder="Nhập tin nhắn..."
+      >
+
+
+      <button
+        class="send-btn"
+        onclick="sendMessage()"
+      >
+        Gửi
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MEMBERS -->
+
+  <div class="members">
+
+    <div class="members-title">
+      THÀNH VIÊN
+    </div>
+
+    <div id="membersList"></div>
+
+  </div>
 
 </div>
 
 
-<!-- ================= SETTINGS ================= -->
+<!-- ==================================================
+     FRIENDS MODAL
+================================================== -->
 
-<div id="settingsModal" class="modal">
+<div
+  id="friendsModal"
+  class="modal"
+  onclick="outsideClose(event,'friendsModal')"
+>
 
-    <div class="modalBox">
+  <div class="modal-box">
 
-        <h2>⚙️ Cài đặt tài khoản</h2>
+    <div class="modal-head">
 
-        <div class="settingSection">
+      <h2>
+        👥 Bạn bè
+      </h2>
 
-            <h3>Ảnh đại diện</h3>
-
-            <div class="avatarSetting">
-
-                <img id="settingsAvatar">
-
-                <div class="avatarButtons">
-
-                    <button class="smallBtn"
-                            onclick="chooseAvatar()">
-                        Chọn ảnh
-                    </button>
-
-                    <button class="smallBtn dangerBtn"
-                            onclick="deleteCurrentAvatar()">
-                        Xóa avatar
-                    </button>
-
-                </div>
-
-            </div>
-
-            <input
-                id="avatarInput"
-                type="file"
-                accept="image/*"
-                style="display:none"
-                onchange="openAvatarEditor(event)"
-            >
-
-        </div>
-
-
-        <div class="settingSection">
-
-            <h3>Lịch sử avatar</h3>
-
-            <div id="avatarHistory" class="avatarHistory"></div>
-
-        </div>
-
-
-        <div class="settingSection">
-
-            <h3>Tên người dùng</h3>
-
-            <input
-                id="usernameInput"
-                type="text"
-                placeholder="Tên người dùng"
-            >
-
-            <button class="saveBtn"
-                    onclick="saveUsername()">
-                Lưu tên
-            </button>
-
-        </div>
-
-
-        <div class="settingSection">
-
-            <h3>Màu giao diện</h3>
-
-            <div class="themeGrid">
-
-                <div class="theme"
-                     style="background:#5865f2"
-                     onclick="setTheme('#5865f2')"></div>
-
-                <div class="theme"
-                     style="background:#57f287"
-                     onclick="setTheme('#57f287')"></div>
-
-                <div class="theme"
-                     style="background:#fee75c"
-                     onclick="setTheme('#fee75c')"></div>
-
-                <div class="theme"
-                     style="background:#eb459e"
-                     onclick="setTheme('#eb459e')"></div>
-
-                <div class="theme"
-                     style="background:#ed4245"
-                     onclick="setTheme('#ed4245')"></div>
-
-                <div class="theme"
-                     style="background:#9b59b6"
-                     onclick="setTheme('#9b59b6')"></div>
-
-                <div class="theme"
-                     style="background:#00b0f4"
-                     onclick="setTheme('#00b0f4')"></div>
-
-            </div>
-
-        </div>
-
-
-        <div style="text-align:right">
-
-            <button class="smallBtn"
-                    onclick="closeSettings()">
-                Đóng
-            </button>
-
-        </div>
+      <button
+        class="close"
+        onclick="closeModal('friendsModal')"
+      >
+        ✕
+      </button>
 
     </div>
+
+
+    <div class="search">
+
+      <input
+        id="friendInput"
+        placeholder="Nhập username..."
+      >
+
+      <button
+        onclick="addFriend()"
+      >
+        ➕
+      </button>
+
+    </div>
+
+
+    <h3>
+      📩 Lời mời
+    </h3>
+
+    <div id="requests"></div>
+
+
+    <h3 style="margin-top:25px">
+      👥 Bạn bè
+    </h3>
+
+    <div id="friends"></div>
+
+  </div>
 
 </div>
 
 
-<!-- ================= AVATAR EDITOR ================= -->
+<!-- ==================================================
+     PROFILE MODAL
+================================================== -->
 
-<div id="avatarEditorModal" class="modal">
+<div
+  id="profileModal"
+  class="modal"
+  onclick="outsideClose(event,'profileModal')"
+>
 
-    <div class="modalBox">
+  <div class="modal-box">
 
-        <h2>✏️ Chỉnh sửa avatar</h2>
-
-        <div class="editorWrap">
-
-            <div id="editorCanvasWrap" class="editorCanvasWrap">
-
-                <canvas id="avatarCanvas"
-                        width="600"
-                        height="600">
-                </canvas>
-
-            </div>
+    <div
+      class="cover"
+      id="profileCover"
+    ></div>
 
 
-            <div class="editorControls">
+    <div class="profile">
 
-                <div class="controlRow">
+      <img
+        id="profileAvatar"
+      >
 
-                    <button onclick="changeZoom(-0.1)">
-                        −
-                    </button>
+      <div>
 
-                    <input
-                        id="zoomRange"
-                        type="range"
-                        min="0.3"
-                        max="3"
-                        step="0.01"
-                        value="1"
-                        oninput="setZoomFromRange(this.value)"
-                    >
+        <h2
+          id="profileName"
+        ></h2>
 
-                    <button onclick="changeZoom(0.1)">
-                        ＋
-                    </button>
-
-                </div>
-
-
-                <div class="controlRow">
-
-                    <button onclick="rotateImage(-10)">
-                        ↶ Xoay trái
-                    </button>
-
-                    <button onclick="rotateImage(10)">
-                        Xoay phải ↷
-                    </button>
-
-                </div>
-
-
-                <div class="controlRow">
-
-                    <button onclick="resetEditor()">
-                        Đặt lại
-                    </button>
-
-                    <button onclick="centerEditorImage()">
-                        Căn giữa
-                    </button>
-
-                </div>
-
-            </div>
-
+        <div class="online">
+          ● Online
         </div>
 
-
-        <div class="editorActions">
-
-            <button class="smallBtn"
-                    onclick="closeAvatarEditor()">
-                Hủy
-            </button>
-
-            <button class="saveBtn"
-                    onclick="saveEditedAvatar()">
-                Lưu avatar
-            </button>
-
-        </div>
+      </div>
 
     </div>
+
+
+    <p
+      id="profileBio"
+      class="profile-bio"
+    ></p>
+
+
+    <div
+      id="profileActions"
+      style="margin-top:20px"
+    ></div>
+
+  </div>
 
 </div>
 
 
-<script>
+<!-- ==================================================
+     SETTINGS MODAL
+================================================== -->
 
-/* =========================================================
-   DATABASE LOCAL
-========================================================= */
+<div
+  id="settingsModal"
+  class="modal"
+  onclick="outsideClose(event,'settingsModal')"
+>
 
-const ACCOUNT_KEY = "mychat_accounts_v3";
-const SESSION_KEY = "mychat_session_v3";
-const MESSAGE_KEY = "mychat_messages_v3";
-const SAVED_KEY = "mychat_saved_accounts_v3";
+  <div class="modal-box">
 
-let accounts = JSON.parse(localStorage.getItem(ACCOUNT_KEY) || "{}");
-let messages = JSON.parse(localStorage.getItem(MESSAGE_KEY) || "{}");
-let savedAccounts = JSON.parse(localStorage.getItem(SAVED_KEY) || "[]");
+    <div class="modal-head">
+
+      <h2>
+        ⚙️ Hồ sơ
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('settingsModal')"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <label>
+      Bio
+    </label>
+
+    <input
+      id="bioInput"
+      class="form-input"
+      maxlength="120"
+    >
+
+
+    <label>
+      Avatar
+    </label>
+
+    <input
+      id="avatarInput"
+      type="file"
+      accept="image/*"
+      style="
+        width:100%;
+        margin:10px 0 20px;
+      "
+    >
+
+
+    <button
+      class="save"
+      onclick="saveProfile()"
+    >
+      💾 Lưu hồ sơ
+    </button>
+
+  </div>
+
+</div>
+
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
+
+<script>const API = "/api";
+
 
 let currentUser = null;
+
 let currentChannel = null;
 
+let registerMode = false;
 
-/* =========================================================
-   HELPERS
-========================================================= */
+let lastMessageCount = 0;
 
-function saveAll(){
 
-    localStorage.setItem(
-        ACCOUNT_KEY,
-        JSON.stringify(accounts)
+/* ==========================================
+   STICKERS TỰ LÀM
+========================================== */
+
+const STICKERS = [
+
+  "🔥",
+  "⚔️",
+  "😎",
+  "😂",
+  "💀",
+  "👑",
+  "🍎",
+  "🏴‍☠️",
+  "💥",
+  "🤣",
+  "😡",
+  "GG"
+
+];
+
+
+function buildStickers(){
+
+  const box =
+    document.getElementById(
+      "stickers"
     );
 
-    localStorage.setItem(
-        MESSAGE_KEY,
-        JSON.stringify(messages)
+  box.innerHTML = "";
+
+  STICKERS.forEach(sticker => {
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+    button.textContent =
+      sticker;
+
+    button.onclick =
+      () => sendSticker(sticker);
+
+    box.appendChild(button);
+
+  });
+
+}
+
+buildStickers();
+
+
+/* ==========================================
+   API
+========================================== */
+
+async function api(
+  url,
+  method = "POST",
+  body = {}
+){
+
+  try{
+
+    const response =
+      await fetch(
+        url,
+        {
+          method:method,
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            method === "GET"
+              ? undefined
+              : JSON.stringify(body)
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if(!response.ok){
+
+      throw new Error(
+        result.error ||
+        "Có lỗi xảy ra."
+      );
+
+    }
+
+
+    return result;
+
+  }
+
+  catch(error){
+
+    showToast(
+      error.message
     );
 
-    localStorage.setItem(
-        SAVED_KEY,
-        JSON.stringify(savedAccounts)
+    throw error;
+
+  }
+
+}
+
+
+/* ==========================================
+   AUTH MODE
+========================================== */
+
+function toggleAuth(){
+
+  registerMode =
+    !registerMode;
+
+
+  document.getElementById(
+    "authButton"
+  ).textContent =
+    registerMode
+      ? "Đăng ký"
+      : "Đăng nhập";
+
+
+  document.getElementById(
+    "authDescription"
+  ).textContent =
+    registerMode
+      ? "Tạo tài khoản mới"
+      : "Đăng nhập vào cộng đồng";
+
+
+  document.getElementById(
+    "switchText"
+  ).textContent =
+    registerMode
+      ? "Đã có tài khoản? Đăng nhập"
+      : "Chưa có tài khoản? Đăng ký";
+
+}
+
+
+/* ==========================================
+   LOGIN / REGISTER
+========================================== */
+
+async function auth(){
+
+  const username =
+    document
+      .getElementById("username")
+      .value
+      .trim();
+
+
+  const password =
+    document
+      .getElementById("password")
+      .value;
+
+
+  if(!username || !password){
+
+    showToast(
+      "Nhập đầy đủ thông tin."
     );
-}
+
+    return;
+
+  }
 
 
-function defaultAvatar(name){
+  try{
 
-    return "https://ui-avatars.com/api/?name="
-        + encodeURIComponent(name)
-        + "&background=5865f2&color=fff&size=256";
-}
+    let result;
 
 
-/* =========================================================
-   AUTH SCREEN
-========================================================= */
+    if(registerMode){
 
-function showRegister(){
+      result =
+        await api(
+          API + "/register",
+          "POST",
+          {
+            username,
+            password
+          }
+        );
 
-    document.getElementById("loginForm").style.display="none";
-    document.getElementById("registerForm").style.display="block";
-}
+    }
 
+    else{
 
-function showLogin(){
+      result =
+        await api(
+          API + "/login",
+          "POST",
+          {
+            username,
+            password
+          }
+        );
 
-    document.getElementById("registerForm").style.display="none";
-    document.getElementById("loginForm").style.display="block";
-
-    renderSavedAccounts();
-}
-
-
-/* =========================================================
-   REGISTER
-========================================================= */
-
-function register(){
-
-    const username =
-        document.getElementById("registerUsername").value.trim();
-
-    const password =
-        document.getElementById("registerPassword").value;
-
-    const password2 =
-        document.getElementById("registerPassword2").value;
-
-
-    if(!username || !password){
-
-        alert("Hãy nhập đầy đủ thông tin.");
-        return;
     }
 
 
-    if(password !== password2){
+    currentUser =
+      result.user;
 
-        alert("Mật khẩu nhập lại không giống nhau.");
-        return;
+
+    localStorage.setItem(
+      "bloxVN_user",
+      currentUser.name
+    );
+
+
+    showApp();
+
+  }
+
+  catch{
+
+    // api() đã hiện lỗi
+
+  }
+
+}
+
+
+/* ==========================================
+   SHOW APP
+========================================== */
+
+async function showApp(){
+
+  document.getElementById(
+    "auth"
+  ).style.display =
+    "none";
+
+
+  document.getElementById(
+    "app"
+  ).style.display =
+    "grid";
+
+
+  updateMyUI();
+
+
+  await loadMembers();
+
+}
+
+
+/* ==========================================
+   MY UI
+========================================== */
+
+function updateMyUI(){
+
+  if(!currentUser)
+    return;
+
+
+  document.getElementById(
+    "myName"
+  ).textContent =
+    currentUser.name;
+
+
+  document.getElementById(
+    "myAvatar"
+  ).src =
+    avatar(
+      currentUser
+    );
+
+}
+
+
+/* ==========================================
+   AVATAR
+========================================== */
+
+function avatar(user){
+
+  if(
+    user &&
+    user.avatar
+  ){
+
+    return user.avatar;
+
+  }
+
+
+  const name =
+    user?.name ||
+    "User";
+
+
+  return (
+    "https://ui-avatars.com/api/" +
+    "?name=" +
+    encodeURIComponent(name) +
+    "&background=5865f2" +
+    "&color=fff"
+  );
+
+}
+
+
+/* ==========================================
+   HOME
+========================================== */
+
+function home(){
+
+  currentChannel = null;
+
+
+  document.getElementById(
+    "homePage"
+  ).classList.remove(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "messages"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "inputArea"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "channelName"
+  ).textContent =
+    "Trang chủ";
+
+
+  document
+    .querySelectorAll(".channel")
+    .forEach(
+      x =>
+        x.classList.remove(
+          "active"
+        )
+    );
+
+}
+
+
+/* ==========================================
+   CHANNEL
+========================================== */
+
+async function openChannel(
+  channel
+){
+
+  currentChannel =
+    channel;
+
+
+  document.getElementById(
+    "homePage"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "messages"
+  ).classList.remove(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "inputArea"
+  ).classList.remove(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "channelName"
+  ).textContent =
+    channel;
+
+
+  document
+    .querySelectorAll(".channel")
+    .forEach(
+      x => {
+
+        x.classList.toggle(
+          "active",
+          x.textContent
+            .replace(
+              /[^\wÀ-ỹ ]/g,
+              ""
+            )
+            .trim()
+            .includes(
+              channel
+            )
+        );
+
+      }
+    );
+
+
+  await loadMessages();
+
+}
+
+
+/* ==========================================
+   LOAD MESSAGES
+========================================== */
+
+async function loadMessages(){
+
+  if(!currentChannel)
+    return;
+
+
+  try{
+
+    const result =
+      await api(
+        API + "/messages",
+        "POST",
+        {
+          channel:
+            currentChannel
+        }
+      );
+
+
+    const list =
+      result.messages || [];
+
+
+    if(
+      list.length ===
+      lastMessageCount
+    ){
+
+      return;
+
     }
 
 
-    if(username.length < 3){
+    lastMessageCount =
+      list.length;
 
-        alert("Tên tài khoản phải có ít nhất 3 ký tự.");
-        return;
+
+    renderMessages(
+      list
+    );
+
+  }
+
+  catch{
+
+  }
+
+}
+
+
+/* ==========================================
+   RENDER MESSAGE
+========================================== */
+
+function renderMessages(
+  list
+){
+
+  const box =
+    document.getElementById(
+      "messages"
+    );
+
+
+  box.innerHTML = "";
+
+
+  list.forEach(
+    message => {
+
+      const user =
+        window.allUsers?.find(
+          x =>
+            x.name ===
+            message.user
+        );
+
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.className =
+        "message";
+
+
+      let content = "";
+
+
+      if(
+        message.type ===
+        "text"
+      ){
+
+        content =
+          `<div class="text">
+            ${escapeHTML(
+              message.content
+            )}
+          </div>`;
+
+      }
+
+
+      else if(
+        message.type ===
+        "sticker"
+      ){
+
+        content =
+          `<div class="sticker">
+            ${escapeHTML(
+              message.content
+            )}
+          </div>`;
+
+      }
+
+
+      else if(
+        message.type ===
+        "image"
+      ){
+
+        content =
+          `<img
+            class="message-image"
+            src="${message.content}"
+            alt="image"
+          >`;
+
+      }
+
+
+      row.innerHTML = `
+
+        <img
+          class="message-avatar"
+          src="${avatar(user)}"
+        >
+
+        <div>
+
+          <span
+            class="message-name"
+          >
+            ${escapeHTML(
+              message.user
+            )}
+          </span>
+
+          <span class="time">
+            ${message.time}
+          </span>
+
+          ${content}
+
+        </div>
+
+      `;
+
+
+      row
+        .querySelector(
+          ".message-name"
+        )
+        .onclick =
+          () =>
+            openProfile(
+              message.user
+            );
+
+
+      box.appendChild(
+        row
+      );
+
     }
+  );
 
 
-    if(accounts[username]){
+  box.scrollTop =
+    box.scrollHeight;
 
-        alert("Tài khoản này đã tồn tại.");
-        return;
+}
+
+
+/* ==========================================
+   SEND TEXT
+========================================== */
+
+async function sendMessage(){
+
+  if(!currentChannel)
+    return;
+
+
+  const input =
+    document.getElementById(
+      "messageInput"
+    );
+
+
+  const text =
+    input.value.trim();
+
+
+  if(!text)
+    return;
+
+
+  await api(
+    API + "/message",
+    "POST",
+    {
+      username:
+        currentUser.name,
+
+      channel:
+        currentChannel,
+
+      type:
+        "text",
+
+      content:
+        text
     }
+  );
 
 
-    accounts[username] = {
+  input.value = "";
 
-        password: password,
 
-        avatar: defaultAvatar(username),
+  lastMessageCount =
+    -1;
 
-        avatarHistory: [],
 
-        theme: "#5865f2"
+  await loadMessages();
+
+}
+
+
+/* ==========================================
+   SEND STICKER
+========================================== */
+
+async function sendSticker(
+  sticker
+){
+
+  if(!currentChannel)
+    return;
+
+
+  await api(
+    API + "/message",
+    "POST",
+    {
+      username:
+        currentUser.name,
+
+      channel:
+        currentChannel,
+
+      type:
+        "sticker",
+
+      content:
+        sticker
+    }
+  );
+
+
+  document
+    .getElementById(
+      "stickers"
+    )
+    .classList.remove(
+      "show"
+    );
+
+
+  lastMessageCount =
+    -1;
+
+
+  await loadMessages();
+
+}
+
+
+/* ==========================================
+   IMAGE
+========================================== */
+
+function sendImage(event){
+
+  const file =
+    event.target.files[0];
+
+
+  if(!file)
+    return;
+
+
+  if(
+    file.size >
+    5 * 1024 * 1024
+  ){
+
+    showToast(
+      "Ảnh tối đa 5MB."
+    );
+
+    event.target.value =
+      "";
+
+    return;
+
+  }
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    async () => {
+
+      try{
+
+        await api(
+          API + "/message",
+          "POST",
+          {
+            username:
+              currentUser.name,
+
+            channel:
+              currentChannel,
+
+            type:
+              "image",
+
+            content:
+              reader.result
+          }
+        );
+
+
+        lastMessageCount =
+          -1;
+
+
+        await loadMessages();
+
+      }
+
+      catch{
+
+      }
 
     };
 
 
-    saveAll();
+  reader.readAsDataURL(
+    file
+  );
 
 
-    document.getElementById("loginUsername").value = username;
+  event.target.value =
+    "";
 
-    document.getElementById("loginPassword").value = password;
-
-
-    alert("Tạo tài khoản thành công!");
-
-
-    showLogin();
 }
 
 
-/* =========================================================
-   LOGIN
-========================================================= */
+/* ==========================================
+   STICKER PANEL
+========================================== */
 
-function login(){
+function toggleStickers(){
 
-    const username =
-        document.getElementById("loginUsername").value.trim();
+  document
+    .getElementById(
+      "stickers"
+    )
+    .classList.toggle(
+      "show"
+    );
 
-    const password =
-        document.getElementById("loginPassword").value;
-
-    const remember =
-        document.getElementById("rememberMe").checked;
-
-
-    if(!accounts[username]){
-
-        alert("Không tìm thấy tài khoản.");
-        return;
-    }
+}
 
 
-    if(accounts[username].password !== password){
+/* ==========================================
+   LOAD MEMBERS
+========================================== */
 
-        alert("Sai mật khẩu.");
-        return;
-    }
+async function loadMembers(){
+
+  try{
+
+    const result =
+      await api(
+        API + "/users",
+        "GET"
+      );
 
 
-    currentUser = username;
+    window.allUsers =
+      result.users || [];
 
 
-    /*
-       QUAN TRỌNG:
-       Nếu người dùng chọn ghi nhớ,
-       ta lưu tài khoản vào danh sách đã nhớ.
-    */
+    renderMembers();
 
-    if(remember){
+    refreshCurrentUser();
 
-        if(!savedAccounts.includes(username)){
+  }
 
-            savedAccounts.push(username);
+  catch{
 
-        }
+  }
 
-        localStorage.setItem(
-            SESSION_KEY,
-            username
+}
+
+
+function renderMembers(){
+
+  const box =
+    document.getElementById(
+      "membersList"
+    );
+
+
+  box.innerHTML = "";
+
+
+  (
+    window.allUsers || []
+  ).forEach(
+    user => {
+
+      const div =
+        document.createElement(
+          "div"
         );
 
-    }else{
 
-        /*
-           Nếu không chọn ghi nhớ,
-           phiên đăng nhập chỉ tồn tại trong tab hiện tại.
-        */
-
-        localStorage.removeItem(SESSION_KEY);
-
-        savedAccounts =
-            savedAccounts.filter(
-                x => x !== username
-            );
-
-    }
+      div.className =
+        "member";
 
 
-    saveAll();
+      div.innerHTML = `
 
-    openApp();
-}
+        <img
+          src="${avatar(user)}"
+        >
 
+        <div>
 
-/* =========================================================
-   SAVED ACCOUNTS
-========================================================= */
+          <strong>
+            ${escapeHTML(
+              user.name
+            )}
+          </strong>
 
-function renderSavedAccounts(){
-
-    const box =
-        document.getElementById("savedAccountsBox");
-
-    if(savedAccounts.length === 0){
-
-        box.innerHTML = "";
-        return;
-    }
-
-
-    let html =
-        "<h3>TÀI KHOẢN ĐÃ GHI NHỚ</h3>";
-
-
-    savedAccounts.forEach(username => {
-
-        if(!accounts[username]) return;
-
-
-        const account = accounts[username];
-
-
-        html += `
-
-        <div class="savedAccount"
-             onclick="selectSavedAccount('${escapeAttr(username)}')">
-
-            <img src="${account.avatar}">
-
-            <div class="savedAccountInfo">
-
-                <div class="savedAccountName">
-                    ${escapeHTML(username)}
-                </div>
-
-                <div class="savedAccountText">
-                    Đã ghi nhớ trên thiết bị này
-                </div>
-
-            </div>
-
-            <div class="removeSaved"
-                 onclick="event.stopPropagation();removeSavedAccount('${escapeAttr(username)}')">
-                ✕
-            </div>
+          <div class="online">
+            ● Online
+          </div>
 
         </div>
 
-        `;
-
-    });
+      `;
 
 
-    box.innerHTML = html;
+      div.onclick =
+        () =>
+          openProfile(
+            user.name
+          );
+
+
+      box.appendChild(
+        div
+      );
+
+    }
+  );
+
 }
 
 
-function selectSavedAccount(username){
+/* ==========================================
+   REFRESH CURRENT USER
+========================================== */
 
-    document.getElementById("loginUsername").value =
-        username;
+function refreshCurrentUser(){
 
-    document.getElementById("loginPassword").focus();
+  const fresh =
+    window.allUsers?.find(
+      x =>
+        x.name ===
+        currentUser.name
+    );
 
-    document.getElementById("rememberMe").checked =
-        true;
+
+  if(fresh){
+
+    currentUser =
+      fresh;
+
+    updateMyUI();
+
+  }
+
 }
 
 
-function removeSavedAccount(username){
+/* ==========================================
+   FRIENDS
+========================================== */
 
-    savedAccounts =
-        savedAccounts.filter(
-            x => x !== username
+async function openFriends(){
+
+  await loadMembers();
+
+
+  document.getElementById(
+    "friendsModal"
+  ).style.display =
+    "flex";
+
+
+  renderFriends();
+
+}
+
+
+function renderFriends(){
+
+  const me =
+    window.allUsers?.find(
+      x =>
+        x.name ===
+        currentUser.name
+    );
+
+
+  if(!me)
+    return;
+
+
+  const requestBox =
+    document.getElementById(
+      "requests"
+    );
+
+
+  const friendBox =
+    document.getElementById(
+      "friends"
+    );
+
+
+  requestBox.innerHTML =
+    "";
+
+  friendBox.innerHTML =
+    "";
+
+
+  if(
+    !me.requests ||
+    !me.requests.length
+  ){
+
+    requestBox.innerHTML =
+      "<p style='color:#949ba4'>Không có lời mời.</p>";
+
+  }
+
+
+  (
+    me.requests || []
+  ).forEach(
+    username => {
+
+      const user =
+        window.allUsers.find(
+          x =>
+            x.name ===
+            username
         );
 
 
-    if(localStorage.getItem(SESSION_KEY) === username){
+      if(!user)
+        return;
 
-        localStorage.removeItem(SESSION_KEY);
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "friend";
+
+
+      div.innerHTML = `
+
+        <img
+          src="${avatar(user)}"
+        >
+
+        <div class="friend-info">
+
+          <strong>
+            ${escapeHTML(
+              user.name
+            )}
+          </strong>
+
+          <small>
+            Muốn kết bạn với bạn
+          </small>
+
+        </div>
+
+        <button
+          class="accept"
+        >
+          ✓
+        </button>
+
+        <button
+          class="reject"
+        >
+          ✕
+        </button>
+
+      `;
+
+
+      div
+        .querySelector(
+          ".accept"
+        )
+        .onclick =
+          () =>
+            acceptFriend(
+              username
+            );
+
+
+      div
+        .querySelector(
+          ".reject"
+        )
+        .onclick =
+          () =>
+            rejectFriend(
+              username
+            );
+
+
+      requestBox.appendChild(
+        div
+      );
+
+    }
+  );
+
+
+  if(
+    !me.friends ||
+    !me.friends.length
+  ){
+
+    friendBox.innerHTML =
+      "<p style='color:#949ba4'>Chưa có bạn bè.</p>";
+
+  }
+
+
+  (
+    me.friends || []
+  ).forEach(
+    username => {
+
+      const user =
+        window.allUsers.find(
+          x =>
+            x.name ===
+            username
+        );
+
+
+      if(!user)
+        return;
+
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "friend";
+
+
+      div.innerHTML = `
+
+        <img
+          src="${avatar(user)}"
+        >
+
+        <div class="friend-info">
+
+          <strong>
+            ${escapeHTML(
+              user.name
+            )}
+          </strong>
+
+          <small>
+            ● Bạn bè
+          </small>
+
+        </div>
+
+        <button
+          class="remove"
+        >
+          🗑️
+        </button>
+
+      `;
+
+
+      div
+        .querySelector(
+          ".remove"
+        )
+        .onclick =
+          () =>
+            removeFriend(
+              username
+            );
+
+
+      friendBox.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
+
+
+/* ==========================================
+   ADD FRIEND
+========================================== */
+
+async function addFriend(){
+
+  const input =
+    document.getElementById(
+      "friendInput"
+    );
+
+
+  const username =
+    input.value.trim();
+
+
+  if(!username)
+    return;
+
+
+  await api(
+    API + "/friend/add",
+    "POST",
+    {
+      from:
+        currentUser.name,
+
+      to:
+        username
+    }
+  );
+
+
+  input.value = "";
+
+
+  showToast(
+    "Đã gửi lời mời kết bạn!"
+  );
+
+}
+
+
+/* ==========================================
+   ACCEPT FRIEND
+========================================== */
+
+async function acceptFriend(
+  username
+){
+
+  await api(
+    API + "/friend/accept",
+    "POST",
+    {
+      username:
+        currentUser.name,
+
+      friend:
+        username
+    }
+  );
+
+
+  await loadMembers();
+
+  renderFriends();
+
+
+  showToast(
+    "Đã trở thành bạn bè!"
+  );
+
+}
+
+
+/* ==========================================
+   REJECT
+========================================== */
+
+async function rejectFriend(
+  username
+){
+
+  await api(
+    API + "/friend/reject",
+    "POST",
+    {
+      username:
+        currentUser.name,
+
+      friend:
+        username
+    }
+  );
+
+
+  await loadMembers();
+
+  renderFriends();
+
+}
+
+
+/* ==========================================
+   REMOVE
+========================================== */
+
+async function removeFriend(
+  username
+){
+
+  if(
+    !confirm(
+      "Xóa người này khỏi bạn bè?"
+    )
+  )
+    return;
+
+
+  await api(
+    API + "/friend/remove",
+    "POST",
+    {
+      username:
+        currentUser.name,
+
+      friend:
+        username
+    }
+  );
+
+
+  await loadMembers();
+
+  renderFriends();
+
+}
+
+
+/* ==========================================
+   PROFILE
+========================================== */
+
+async function openProfile(
+  username
+){
+
+  const user =
+    window.allUsers?.find(
+      x =>
+        x.name ===
+        username
+    );
+
+
+  if(!user)
+    return;
+
+
+  document.getElementById(
+    "profileAvatar"
+  ).src =
+    avatar(user);
+
+
+  document.getElementById(
+    "profileName"
+  ).textContent =
+    user.name;
+
+
+  document.getElementById(
+    "profileBio"
+  ).textContent =
+    user.bio || "";
+
+
+  const actions =
+    document.getElementById(
+      "profileActions"
+    );
+
+
+  actions.innerHTML = "";
+
+
+  if(
+    username ===
+    currentUser.name
+  ){
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+
+    button.className =
+      "save";
+
+
+    button.textContent =
+      "⚙️ Chỉnh hồ sơ";
+
+
+    button.onclick =
+      () => {
+
+        closeModal(
+          "profileModal"
+        );
+
+        openSettings();
+
+      };
+
+
+    actions.appendChild(
+      button
+    );
+
+  }
+
+  else{
+
+    const isFriend =
+      (
+        currentUser.friends ||
+        []
+      ).includes(
+        username
+      );
+
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+
+    button.className =
+      "save";
+
+
+    button.textContent =
+      isFriend
+        ? "✓ Bạn bè"
+        : "➕ Add Friend";
+
+
+    button.onclick =
+      async () => {
+
+        if(isFriend)
+          return;
+
+
+        await api(
+          API + "/friend/add",
+          "POST",
+          {
+            from:
+              currentUser.name,
+
+            to:
+              username
+          }
+        );
+
+
+        showToast(
+          "Đã gửi lời mời!"
+        );
+
+      };
+
+
+    actions.appendChild(
+      button
+    );
+
+  }
+
+
+  document.getElementById(
+    "profileModal"
+  ).style.display =
+    "flex";
+
+}
+
+
+/* ==========================================
+   SETTINGS
+========================================== */
+
+function openSettings(){
+
+  document.getElementById(
+    "bioInput"
+  ).value =
+    currentUser.bio || "";
+
+
+  document.getElementById(
+    "settingsModal"
+  ).style.display =
+    "flex";
+
+}
+
+
+async function saveProfile(){
+
+  const bio =
+    document
+      .getElementById(
+        "bioInput"
+      )
+      .value
+      .trim();
+
+
+  const input =
+    document.getElementById(
+      "avatarInput"
+    );
+
+
+  let avatarData =
+    currentUser.avatar || "";
+
+
+  if(
+    input.files &&
+    input.files[0]
+  ){
+
+    const file =
+      input.files[0];
+
+
+    if(
+      file.size >
+      2 * 1024 * 1024
+    ){
+
+      showToast(
+        "Avatar tối đa 2MB."
+      );
+
+      return;
 
     }
 
 
-    saveAll();
+    avatarData =
+      await fileToDataURL(
+        file
+      );
 
-    renderSavedAccounts();
-}
-
-
-/* =========================================================
-   ESCAPE
-========================================================= */
-
-function escapeHTML(text){
-
-    return String(text)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-}
+  }
 
 
-function escapeAttr(text){
+  try{
 
-    return String(text)
-        .replaceAll("\\","\\\\")
-        .replaceAll("'","\\'");
-}
+    const result =
+      await api(
+        API + "/profile",
+        "POST",
+        {
+          username:
+            currentUser.name,
 
+          bio:
+            bio,
 
-/* =========================================================
-   OPEN APP
-========================================================= */
-
-function openApp(){
-
-    document.getElementById("authScreen").style.display="none";
-
-    document.getElementById("app").style.display="flex";
-
-    updateUserUI();
-
-    loadTheme();
-
-    goHome();
-}
+          avatar:
+            avatarData
+        }
+      );
 
 
-function updateUserUI(){
-
-    if(!currentUser || !accounts[currentUser]) return;
-
-
-    const account =
-        accounts[currentUser];
+    currentUser =
+      result.user;
 
 
-    document.getElementById("currentUserName")
-        .textContent = currentUser;
+    updateMyUI();
+
+    await loadMembers();
 
 
-    document.getElementById("currentUserAvatar")
-        .src = account.avatar;
+    closeModal(
+      "settingsModal"
+    );
 
 
-    document.getElementById("memberName")
-        .textContent = currentUser;
+    showToast(
+      "Đã lưu hồ sơ!"
+    );
 
+  }
 
-    document.getElementById("memberAvatar")
-        .src = account.avatar;
+  catch{
+
+  }
 
 }
 
 
-/* =========================================================
-   HOME
-========================================================= */
+/* ==========================================
+   FILE READER
+========================================== */
 
-function goHome(){
+function fileToDataURL(
+  file
+){
 
-    currentChannel = null;
+  return new Promise(
+    (resolve,reject) => {
 
-    document.getElementById("homePage")
-        .style.display="block";
-
-    document.getElementById("chatPage")
-        .style.display="none";
-
-
-    document.getElementById("topHash")
-        .textContent="";
+      const reader =
+        new FileReader();
 
 
-    document.getElementById("topTitle")
-        .textContent="Trang chủ";
+      reader.onload =
+        () =>
+          resolve(
+            reader.result
+          );
 
 
-    document.querySelectorAll(".channel")
-        .forEach(x => x.classList.remove("active"));
+      reader.onerror =
+        reject;
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
 }
 
 
-/* =========================================================
-   CHANNEL
-========================================================= */
+/* ==========================================
+   MODAL
+========================================== */
 
-function openChannel(channel){
+function closeModal(
+  id
+){
 
-    currentChannel = channel;
+  document.getElementById(
+    id
+  ).style.display =
+    "none";
 
-
-    document.getElementById("homePage")
-        .style.display="none";
-
-
-    document.getElementById("chatPage")
-        .style.display="flex";
-
-
-    document.getElementById("topHash")
-        .textContent="#";
-
-
-    document.getElementById("topTitle")
-        .textContent=channel;
-
-
-    document.querySelectorAll(".channel")
-        .forEach(x => {
-
-            x.classList.toggle(
-                "active",
-                x.dataset.channel === channel
-            );
-
-        });
-
-
-    renderMessages();
-
-    setTimeout(scrollToBottom,50);
-
-
-    document.getElementById("messageInput")
-        .focus();
 }
 
 
-/* =========================================================
-   SEND TEXT
-========================================================= */
+function outsideClose(
+  event,
+  id
+){
 
-function handleEnter(event){
+  if(
+    event.target.id ===
+    id
+  ){
 
-    if(event.key === "Enter"){
+    closeModal(id);
+
+  }
+
+}
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+let toastTimer;
+
+
+function showToast(
+  text
+){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+
+  toast.textContent =
+    text;
+
+
+  toast.style.display =
+    "block";
+
+
+  clearTimeout(
+    toastTimer
+  );
+
+
+  toastTimer =
+    setTimeout(
+      () => {
+
+        toast.style.display =
+          "none";
+
+      },
+      2500
+    );
+
+}
+
+
+/* ==========================================
+   ESCAPE HTML
+========================================== */
+
+function escapeHTML(
+  text
+){
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+
+  div.textContent =
+    text;
+
+
+  return div.innerHTML;
+
+}
+
+
+/* ==========================================
+   ENTER SEND
+========================================== */
+
+document
+  .getElementById(
+    "messageInput"
+  )
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if(
+        event.key ===
+        "Enter"
+      ){
 
         event.preventDefault();
 
         sendMessage();
 
-    }
-}
-
-
-function sendMessage(){
-
-    if(!currentUser || !currentChannel)
-        return;
-
-
-    const input =
-        document.getElementById("messageInput");
-
-
-    const text =
-        input.value.trim();
-
-
-    if(!text) return;
-
-
-    if(!messages[currentChannel]){
-
-        messages[currentChannel] = [];
+      }
 
     }
+  );
 
 
-    messages[currentChannel].push({
-
-        id:
-            Date.now()
-            + Math.random(),
-
-        user:
-            currentUser,
-
-        avatar:
-            accounts[currentUser].avatar,
-
-        text:
-            text,
-
-        image:
-            null,
-
-        recalled:
-            false,
-
-        time:
-            new Date().toLocaleTimeString(
-                "vi-VN",
-                {
-                    hour:"2-digit",
-                    minute:"2-digit"
-                }
-            )
-
-    });
-
-
-    input.value="";
-
-    saveAll();
-
-    renderMessages();
-
-    scrollToBottom();
-}
-
-
-/* =========================================================
-   SEND IMAGE
-========================================================= */
-
-function sendImage(event){
-
-    const file =
-        event.target.files[0];
-
-
-    if(!file) return;
-
-
-    if(!file.type.startsWith("image/")){
-
-        alert("Chỉ được chọn file ảnh.");
-        return;
-    }
-
-
-    if(file.size > 5 * 1024 * 1024){
-
-        alert("Ảnh tối đa 5MB trong bản local này.");
-        event.target.value="";
-        return;
-    }
-
-
-    const reader =
-        new FileReader();
-
-
-    reader.onload = function(e){
-
-        if(!messages[currentChannel]){
-
-            messages[currentChannel] = [];
-
-        }
-
-
-        messages[currentChannel].push({
-
-            id:
-                Date.now()
-                + Math.random(),
-
-            user:
-                currentUser,
-
-            avatar:
-                accounts[currentUser].avatar,
-
-            text:
-                "",
-
-            image:
-                e.target.result,
-
-            recalled:
-                false,
-
-            time:
-                new Date().toLocaleTimeString(
-                    "vi-VN",
-                    {
-                        hour:"2-digit",
-                        minute:"2-digit"
-                    }
-                )
-
-        });
-
-
-        saveAll();
-
-        renderMessages();
-
-        scrollToBottom();
-
-    };
-
-
-    reader.readAsDataURL(file);
-
-    event.target.value="";
-}
-
-
-/* =========================================================
-   RENDER MESSAGES
-========================================================= */
-
-function renderMessages(){
-
-    const container =
-        document.getElementById("messages");
-
-
-    if(!currentChannel){
-
-        container.innerHTML="";
-        return;
-    }
-
-
-    const list =
-        messages[currentChannel] || [];
-
-
-    if(list.length === 0){
-
-        container.innerHTML = `
-
-            <div style="
-                text-align:center;
-                color:#777;
-                padding:50px 10px;
-            ">
-
-                <div style="font-size:45px">
-                    💬
-                </div>
-
-                <h2>Chưa có tin nhắn</h2>
-
-                <p>
-                    Hãy là người đầu tiên nhắn tin!
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-    }
-
-
-    container.innerHTML = list.map(msg => {
-
-        const isRecalled =
-            msg.recalled;
-
-
-        let body = "";
-
-
-        if(isRecalled){
-
-            body = `
-                <div class="messageText recalled">
-                    Tin nhắn đã được thu hồi
-                </div>
-            `;
-
-        }else{
-
-            if(msg.text){
-
-                body += `
-                    <div class="messageText">
-                        ${escapeHTML(msg.text)}
-                    </div>
-                `;
-
-            }
-
-
-            if(msg.image){
-
-                body += `
-                    <img
-                        class="messageImage"
-                        src="${msg.image}"
-                        onclick="window.open(this.src)"
-                    >
-                `;
-
-            }
-
-        }
-
-
-        const menu =
-            !isRecalled && msg.user === currentUser
-
-            ? `
-
-            <button
-                class="messageMenuBtn"
-                onclick="showMessageMenu(event,'${msg.id}')">
-                ⋯
-            </button>
-
-            <div
-                id="menu-${msg.id}"
-                class="messageMenu"
-                style="display:none">
-
-                <button
-                    class="danger"
-                    onclick="recallMessage('${msg.id}')">
-                    Thu hồi tin nhắn
-                </button>
-
-            </div>
-
-            `
-
-            : "";
-
-
-        return `
-
-            <div class="message">
-
-                <img
-                    class="messageAvatar"
-                    src="${msg.avatar}"
-                >
-
-                <div class="messageBody">
-
-                    <div class="messageHeader">
-
-                        <span class="messageUser">
-                            ${escapeHTML(msg.user)}
-                        </span>
-
-                        <span class="messageTime">
-                            ${msg.time}
-                        </span>
-
-                    </div>
-
-                    ${body}
-
-                </div>
-
-                ${menu}
-
-            </div>
-
-        `;
-
-    }).join("");
-
-}
-
-
-/* =========================================================
-   MESSAGE MENU
-========================================================= */
-
-function showMessageMenu(event,id){
-
-    event.stopPropagation();
-
-    closeMessageMenus();
-
-
-    const menu =
-        document.getElementById(
-            "menu-" + id
-        );
-
-
-    if(menu){
-
-        menu.style.display="block";
-
-    }
-}
-
-
-function closeMessageMenus(){
-
-    document
-        .querySelectorAll(".messageMenu")
-        .forEach(menu => {
-
-            menu.style.display="none";
-
-        });
-
-}
-
-
-document.addEventListener(
-    "click",
-    closeMessageMenus
-);
-
-
-/* =========================================================
-   RECALL MESSAGE
-========================================================= */
-
-function recallMessage(id){
-
-    if(!currentChannel) return;
-
-
-    const list =
-        messages[currentChannel] || [];
-
-
-    const msg =
-        list.find(
-            x => String(x.id) === String(id)
-        );
-
-
-    if(!msg) return;
-
-
-    if(msg.user !== currentUser){
-
-        alert("Bạn chỉ có thể thu hồi tin nhắn của mình.");
-        return;
-    }
-
-
-    if(!confirm("Thu hồi tin nhắn này?")){
-
-        return;
-    }
-
-
-    msg.recalled = true;
-
-
-    saveAll();
-
-    renderMessages();
-}
-
-
-/* =========================================================
-   SCROLL
-========================================================= */
-
-function scrollToBottom(){
-
-    const box =
-        document.getElementById("messages");
-
-
-    box.scrollTop =
-        box.scrollHeight;
-}
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-function openSettings(){
-
-    const account =
-        accounts[currentUser];
-
-
-    document.getElementById("settingsModal")
-        .style.display="flex";
-
-
-    document.getElementById("settingsAvatar")
-        .src=account.avatar;
-
-
-    document.getElementById("usernameInput")
-        .value=currentUser;
-
-
-    renderAvatarHistory();
-}
-
-
-function closeSettings(){
-
-    document.getElementById("settingsModal")
-        .style.display="none";
-}
-
-
-/* =========================================================
-   AVATAR
-========================================================= */
-
-function chooseAvatar(){
-
-    document.getElementById("avatarInput")
-        .click();
-}
-
-
-let editorImage =
-    new Image();
-
-
-let editorData = {
-
-    x:0,
-    y:0,
-    zoom:1,
-    rotation:0,
-
-    dragging:false,
-
-    startX:0,
-    startY:0,
-
-    startImageX:0,
-    startImageY:0
-
-};
-
-
-function openAvatarEditor(event){
-
-    const file =
-        event.target.files[0];
-
-
-    if(!file) return;
-
-
-    if(!file.type.startsWith("image/")){
-
-        alert("File không phải ảnh.");
-        return;
-    }
-
-
-    const reader =
-        new FileReader();
-
-
-    reader.onload = function(e){
-
-        editorImage =
-            new Image();
-
-
-        editorImage.onload = function(){
-
-            resetEditor();
-
-            document.getElementById(
-                "avatarEditorModal"
-            ).style.display="flex";
-
-            updateEditor();
-
-        };
-
-
-        editorImage.src =
-            e.target.result;
-
-    };
-
-
-    reader.readAsDataURL(file);
-
-    event.target.value="";
-}
-
-
-function resetEditor(){
-
-    editorData.x=0;
-    editorData.y=0;
-    editorData.zoom=1;
-    editorData.rotation=0;
-
-
-    document.getElementById("zoomRange")
-        .value=1;
-
-
-    centerEditorImage();
-}
-
-
-function centerEditorImage(){
-
-    editorData.x=0;
-    editorData.y=0;
-
-    updateEditor();
-}
-
-
-function setZoomFromRange(value){
-
-    editorData.zoom =
-        parseFloat(value);
-
-    updateEditor();
-}
-
-
-function changeZoom(amount){
-
-    editorData.zoom += amount;
-
-
-    if(editorData.zoom < 0.3)
-        editorData.zoom=0.3;
-
-
-    if(editorData.zoom > 3)
-        editorData.zoom=3;
-
-
-    document.getElementById("zoomRange")
-        .value=editorData.zoom;
-
-
-    updateEditor();
-}
-
-
-function rotateImage(amount){
-
-    editorData.rotation += amount;
-
-    updateEditor();
-}
-
-
-function updateEditor(){
-
-    const canvas =
-        document.getElementById("avatarCanvas");
-
-
-    const ctx =
-        canvas.getContext("2d");
-
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    if(!editorImage.complete ||
-       !editorImage.naturalWidth){
-
-        return;
-    }
-
-
-    const scale =
-        Math.max(
-            canvas.width / editorImage.width,
-            canvas.height / editorImage.height
-        )
-        * editorData.zoom;
-
-
-    const w =
-        editorImage.width * scale;
-
-
-    const h =
-        editorImage.height * scale;
-
-
-    ctx.save();
-
-
-    ctx.translate(
-        canvas.width/2 + editorData.x,
-        canvas.height/2 + editorData.y
-    );
-
-
-    ctx.rotate(
-        editorData.rotation *
-        Math.PI / 180
-    );
-
-
-    ctx.drawImage(
-        editorImage,
-        -w/2,
-        -h/2,
-        w,
-        h
-    );
-
-
-    ctx.restore();
-
-}
-
-
-/* ================= DRAG ================= */
-
-const editor =
-    document.getElementById(
-        "editorCanvasWrap"
-    );
-
-
-editor.addEventListener(
-    "pointerdown",
-    function(e){
-
-        editorData.dragging=true;
-
-        editorData.startX=e.clientX;
-        editorData.startY=e.clientY;
-
-        editorData.startImageX=
-            editorData.x;
-
-        editorData.startImageY=
-            editorData.y;
-
-        editor.setPointerCapture(e.pointerId);
-
-    }
-);
-
-
-editor.addEventListener(
-    "pointermove",
-    function(e){
-
-        if(!editorData.dragging)
-            return;
-
-
-        const dx =
-            e.clientX -
-            editorData.startX;
-
-
-        const dy =
-            e.clientY -
-            editorData.startY;
-
-
-        editorData.x =
-            editorData.startImageX + dx * 2;
-
-
-        editorData.y =
-            editorData.startImageY + dy * 2;
-
-
-        updateEditor();
-
-    }
-);
-
-
-editor.addEventListener(
-    "pointerup",
-    function(){
-
-        editorData.dragging=false;
-
-    }
-);
-
-
-editor.addEventListener(
-    "pointercancel",
-    function(){
-
-        editorData.dragging=false;
-
-    }
-);
-
-
-/* =========================================================
-   SAVE EDITED AVATAR
-========================================================= */
-
-function saveEditedAvatar(){
-
-    const canvas =
-        document.getElementById("avatarCanvas");
-
-
-    const dataURL =
-        canvas.toDataURL(
-            "image/jpeg",
-            0.88
-        );
-
-
-    const account =
-        accounts[currentUser];
-
-
-    /*
-       Lưu avatar cũ vào lịch sử
-    */
-
-    if(account.avatar &&
-       !account.avatarHistory.includes(account.avatar)){
-
-        account.avatarHistory.unshift(
-            account.avatar
-        );
-
-    }
-
-
-    /*
-       Giới hạn lịch sử 20 avatar
-    */
-
-    account.avatarHistory =
-        account.avatarHistory.slice(0,20);
-
-
-    account.avatar =
-        dataURL;
-
-
-    saveAll();
-
-    updateUserUI();
-
-    document.getElementById("settingsAvatar")
-        .src=dataURL;
-
-
-    renderAvatarHistory();
-
-    closeAvatarEditor();
-}
-
-
-function closeAvatarEditor(){
-
-    document.getElementById(
-        "avatarEditorModal"
-    ).style.display="none";
-}
-
-
-/* =========================================================
-   AVATAR HISTORY
-========================================================= */
-
-function renderAvatarHistory(){
-
-    const box =
-        document.getElementById(
-            "avatarHistory"
-        );
-
-
-    const history =
-        accounts[currentUser]
-            .avatarHistory || [];
-
-
-    if(history.length === 0){
-
-        box.innerHTML =
-            '<span style="color:#777">Chưa có avatar cũ.</span>';
-
-        return;
-    }
-
-
-    box.innerHTML =
-        history.map(
-            (avatar,index) => `
-
-            <div class="historyItem">
-
-                <img
-                    src="${avatar}"
-                    onclick="setAvatar(${index})"
-                    title="Dùng avatar này"
-                >
-
-                <button
-                    class="historyDelete"
-                    onclick="deleteAvatarFromHistory(${index})">
-                    ×
-                </button>
-
-            </div>
-
-        `
-        ).join("");
-}
-
-
-function setAvatar(index){
-
-    const account =
-        accounts[currentUser];
-
-
-    const avatar =
-        account.avatarHistory[index];
-
-
-    if(!avatar) return;
-
-
-    if(account.avatar !== avatar){
-
-        account.avatarHistory.splice(
-            index,
-            1
-        );
-
-        account.avatarHistory.unshift(
-            account.avatar
-        );
-
-    }
-
-
-    account.avatar =
-        avatar;
-
-
-    saveAll();
-
-    updateUserUI();
-
-    document.getElementById("settingsAvatar")
-        .src=avatar;
-
-
-    renderAvatarHistory();
-}
-
-
-function deleteAvatarFromHistory(index){
-
-    const history =
-        accounts[currentUser]
-            .avatarHistory;
-
-
-    if(!history[index])
-        return;
-
-
-    if(!confirm("Xóa avatar này khỏi lịch sử?"))
-        return;
-
-
-    history.splice(index,1);
-
-
-    saveAll();
-
-    renderAvatarHistory();
-}
-
-
-/* =========================================================
-   DELETE CURRENT AVATAR
-========================================================= */
-
-function deleteCurrentAvatar(){
-
-    if(!confirm("Xóa avatar hiện tại?"))
-        return;
-
-
-    const account =
-        accounts[currentUser];
-
-
-    if(account.avatar &&
-       !account.avatarHistory.includes(account.avatar)){
-
-        account.avatarHistory.unshift(
-            account.avatar
-        );
-
-    }
-
-
-    account.avatar =
-        defaultAvatar(currentUser);
-
-
-    account.avatarHistory =
-        account.avatarHistory.slice(0,20);
-
-
-    saveAll();
-
-    updateUserUI();
-
-    document.getElementById("settingsAvatar")
-        .src=account.avatar;
-
-
-    renderAvatarHistory();
-}
-
-
-/* =========================================================
-   USERNAME
-========================================================= */
-
-function saveUsername(){
-
-    const newName =
-        document.getElementById(
-            "usernameInput"
-        ).value.trim();
-
-
-    if(!newName){
-
-        alert("Tên không được để trống.");
-        return;
-    }
-
-
-    if(newName === currentUser){
-
-        return;
-    }
-
-
-    if(accounts[newName]){
-
-        alert("Tên này đã được sử dụng.");
-        return;
-    }
-
-
-    const oldName =
-        currentUser;
-
-
-    accounts[newName] =
-        accounts[oldName];
-
-
-    delete accounts[oldName];
-
-
-    /*
-       Cập nhật tài khoản được ghi nhớ
-    */
-
-    savedAccounts =
-        savedAccounts.map(
-            x =>
-                x === oldName
-                    ? newName
-                    : x
-        );
-
-
-    /*
-       Cập nhật tin nhắn cũ
-    */
-
-    Object.keys(messages).forEach(channel => {
-
-        messages[channel].forEach(msg => {
-
-            if(msg.user === oldName){
-
-                msg.user =
-                    newName;
-
-            }
-
-        });
-
-    });
-
-
-    currentUser =
-        newName;
-
-
-    if(localStorage.getItem(SESSION_KEY)){
-
-        localStorage.setItem(
-            SESSION_KEY,
-            newName
-        );
-
-    }
-
-
-    saveAll();
-
-    updateUserUI();
-
-    alert("Đã đổi tên thành công.");
-}
-
-
-/* =========================================================
-   THEME
-========================================================= */
-
-function setTheme(color){
-
-    document.documentElement
-        .style.setProperty(
-            "--accent",
-            color
-        );
-
-
-    accounts[currentUser].theme =
-        color;
-
-
-    saveAll();
-
-
-    document.querySelectorAll(".theme")
-        .forEach(x => {
-
-            x.classList.remove("selected");
-
-        });
-}
-
-
-function loadTheme(){
-
-    const color =
-        accounts[currentUser].theme ||
-        "#5865f2";
-
-
-    document.documentElement
-        .style.setProperty(
-            "--accent",
-            color
-        );
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-function logout(){
-
-    if(!confirm("Bạn muốn đăng xuất?"))
-        return;
-
-
-    currentUser=null;
-
-    currentChannel=null;
-
-
-    document.getElementById("app")
-        .style.display="none";
-
-
-    document.getElementById("authScreen")
-        .style.display="flex";
-
-
-    document.getElementById("loginPassword")
-        .value="";
-
-
-    renderSavedAccounts();
-
-
-    /*
-       Không xóa SESSION nếu tài khoản
-       vẫn được ghi nhớ.
-
-       Khi người dùng chọn tài khoản
-       từ danh sách đã nhớ, họ có thể
-       đăng nhập lại.
-    */
-
-}
-
-
-/* =========================================================
+/* ==========================================
    AUTO LOGIN
-========================================================= */
+========================================== */
 
-function autoLogin(){
+async function autoLogin(){
 
-    const session =
-        localStorage.getItem(
-            SESSION_KEY
-        );
-
-
-    if(!session)
-        return;
+  const saved =
+    localStorage.getItem(
+      "bloxVN_user"
+    );
 
 
-    if(!accounts[session]){
+  if(!saved)
+    return;
 
-        localStorage.removeItem(
-            SESSION_KEY
-        );
 
-        return;
-    }
+  try{
 
+    const result =
+      await api(
+        API + "/login",
+        "POST",
+        {
+          username:
+            saved,
+
+          password:
+            ""
+        }
+      );
+
+  }
+
+  catch{
 
     /*
-       Tự động đăng nhập.
+      Server yêu cầu password,
+      nên không auto-login.
     */
 
-    currentUser =
-        session;
+    localStorage.removeItem(
+      "bloxVN_user"
+    );
 
+  }
 
-    openApp();
 }
 
 
-/* =========================================================
-   START
-========================================================= */
+home();
 
-renderSavedAccounts();
 
-autoLogin();
+/* ==========================================
+   REALTIME POLLING
+========================================== */
 
-</script>
+setInterval(
+  async () => {
 
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    if(
+      currentUser &&
+      currentChannel
+    ){
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyD9qpVqWjOdUk7RxiFJMXbuIYN007urGnM",
-    authDomain: "blox-chat-2d8b9.firebaseapp.com",
-    databaseURL: "https://blox-chat-2d8b9-default-rtdb.firebaseio.com",
-    projectId: "blox-chat-2d8b9",
-    storageBucket: "blox-chat-2d8b9.firebasestorage.app",
-    messagingSenderId: "155627730633",
-    appId: "1:155627730633:web:d7df899ed5fa1c16c5bf18",
-    measurementId: "G-JP5VBEJV3R"
-  };
+      await loadMessages();
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-</body>
-</html>
+    }
+
+
+    if(currentUser){
+
+      await loadMembers();
+
+    }
+
+  },
+  1000
+);
