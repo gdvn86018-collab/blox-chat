@@ -37,25 +37,26 @@
 
         .app-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; background: var(--bg-card); position: relative; }
 
-        .mobile-header { height: 55px; background: var(--zalo-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
+        .mobile-header { height: 50px; background: var(--zalo-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
         .mobile-header-title { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
         .mobile-header-actions { display: flex; gap: 15px; font-size: 18px; }
+
+        /* Thanh điều hướng đưa lên TRÊN CÙNG */
+        .top-nav { height: 50px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; flex-shrink: 0; }
+        .nav-tab { display: flex; align-items: center; gap: 6px; color: var(--text-sub); font-size: 13px; font-weight: 500; cursor: pointer; position: relative; padding: 10px 15px; border-bottom: 2px solid transparent; }
+        .nav-tab i { font-size: 16px; }
+        .nav-tab.active { color: var(--zalo-blue); font-weight: bold; border-bottom-color: var(--zalo-blue); }
+        .badge { position: absolute; top: 4px; right: 2px; background: red; color: white; font-size: 9px; border-radius: 50%; padding: 2px 5px; }
 
         .screen-container { flex: 1; position: relative; overflow: hidden; }
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg-card); }
         .screen.active { display: flex; }
 
-        .bottom-nav { height: 60px; background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; flex-shrink: 0; }
-        .nav-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-sub); font-size: 11px; cursor: pointer; position: relative; flex: 1; }
-        .nav-tab i { font-size: 20px; }
-        .nav-tab.active { color: var(--zalo-blue); font-weight: bold; }
-        .badge { position: absolute; top: 0; right: 28%; background: red; color: white; font-size: 9px; border-radius: 50%; padding: 2px 5px; }
-
         .search-bar { padding: 10px 15px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); }
         .search-box { background: var(--bg-gray); border-radius: 20px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
         .search-box input { border: none; background: transparent; outline: none; width: 100%; font-size: 14px; color: var(--text-main); }
         
-        .section-header { padding: 10px 15px 5px; font-size: 12px; font-weight: bold; color: var(--text-sub); text-transform: uppercase; background: var(--bg-gray); border-bottom: 1px solid var(--border-color); }
+        .section-header { padding: 10px 15px 5px; font-size: 11px; font-weight: bold; color: var(--text-sub); text-transform: uppercase; background: var(--bg-gray); border-bottom: 1px solid var(--border-color); }
 
         .chat-list { flex: 1; overflow-y: auto; }
         .chat-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; }
@@ -133,6 +134,7 @@
 </div>
 
 <div class="app-container">
+    <!-- Header -->
     <div class="mobile-header">
         <div class="mobile-header-title">
             <i class="fa-solid fa-paper-plane"></i> My Chat
@@ -142,7 +144,25 @@
         </div>
     </div>
 
+    <!-- Thanh Điều Hướng ĐẶT LÊN TRÊN CÙNG -->
+    <div class="top-nav">
+        <div class="nav-tab active" id="tab-chats" onclick="switchMobileTab('chats')">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span>Tin nhắn</span>
+        </div>
+        <div class="nav-tab" id="tab-friends" onclick="switchMobileTab('friends')">
+            <i class="fa-solid fa-user-group"></i>
+            <span id="friendReqBadge" class="badge" style="display:none;">0</span>
+            <span>Danh bạ</span>
+        </div>
+        <div class="nav-tab" id="tab-settings" onclick="switchMobileTab('settings')">
+            <i class="fa-solid fa-gear"></i>
+            <span>Cài đặt</span>
+        </div>
+    </div>
+
     <div class="screen-container">
+        <!-- Screen Tin nhắn -->
         <div class="screen active" id="chatsScreen">
             <div class="search-bar">
                 <div class="search-box">
@@ -153,6 +173,7 @@
             <div class="chat-list" id="chatList"></div>
         </div>
 
+        <!-- Screen Danh bạ / Lời mời -->
         <div class="screen" id="friendsScreen">
             <div class="view-panel">
                 <h3 style="margin-bottom:15px;">Lời Mời Kết Bạn</h3>
@@ -162,6 +183,7 @@
             </div>
         </div>
 
+        <!-- Screen Cài đặt -->
         <div class="screen" id="settingsScreen">
             <div class="view-panel">
                 <div style="margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:15px;">
@@ -198,6 +220,7 @@
             </div>
         </div>
 
+        <!-- Màn Hình Khung Chat -->
         <div class="chat-view" id="chatView">
             <div class="chat-header">
                 <div style="display:flex; align-items:center; gap:8px;">
@@ -241,22 +264,6 @@
                     <div class="sticker-item" onclick="sendSticker('🚀')">🚀</div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-tab active" id="tab-chats" onclick="switchMobileTab('chats')">
-            <i class="fa-regular fa-comment-dots"></i>
-            <span>Tin nhắn</span>
-        </div>
-        <div class="nav-tab" id="tab-friends" onclick="switchMobileTab('friends')">
-            <i class="fa-solid fa-user-group"></i>
-            <span id="friendReqBadge" class="badge" style="display:none;">0</span>
-            <span>Danh bạ</span>
-        </div>
-        <div class="nav-tab" id="tab-settings" onclick="switchMobileTab('settings')">
-            <i class="fa-solid fa-gear"></i>
-            <span>Cài đặt</span>
         </div>
     </div>
 </div>
@@ -457,12 +464,10 @@
     });
   }
 
-  // SẮP XẾP VÀ HIỂN THỊ DANH SÁCH TÀI KHOẢN THEO CHỮ CÁI A-Z
   function renderSidebarList(users, groups, query) {
     const chatList = document.getElementById('chatList');
     chatList.innerHTML = '';
 
-    // Render Nhóm Chat
     Object.values(groups).forEach(g => {
       if (g.name.toLowerCase().includes(query) && g.members && g.members[currentUser.id]) {
         const div = document.createElement('div');
@@ -476,7 +481,6 @@
       }
     });
 
-    // Lọc và Sắp xếp người dùng theo thứ tự Chữ cái (A - Z)
     const sortedUsers = Object.values(users)
       .filter(u => u.id !== currentUser.id && u.name.toLowerCase().includes(query))
       .sort((a, b) => a.name.localeCompare(b.name, 'vi', { sensitivity: 'base' }));
